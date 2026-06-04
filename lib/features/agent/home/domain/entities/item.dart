@@ -14,4 +14,14 @@ class Item {
     required this.price,
     required this.variants,
   });
+
+  Item copyWith({List<Variant>? variants}) {
+    return Item(
+      id: id,
+      name: name,
+      type: type,
+      price: price,
+      variants: variants ?? this.variants,
+    );
+  }
 }
