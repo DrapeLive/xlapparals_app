@@ -1,16 +1,26 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
+import 'package:xlapparals_app/core/utils/size_utils.dart';
 import 'package:xlapparals_app/features/agent/home/domain/entities/variant.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
+import 'package:xlapparals_app/shared/widgets/zoom_image.dart';
 
 class VariantCard extends StatelessWidget {
   final Variant variant;
   final int index;
-  const VariantCard({super.key, required this.variant, required this.index});
+  final String type;
+  final bool isOutofStock;
+  const VariantCard({
+    super.key,
+    required this.isOutofStock,
+    required this.variant,
+    required this.index,
+    required this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displaySizes = SizeRangeUtils.getSizeRangesWithStock(variant, type);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
@@ -24,11 +34,10 @@ class VariantCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
+                child: ZoomableImage(
                   imageUrl: variant.image,
                   width: 50,
                   height: 50,
-                  fit: BoxFit.cover,
                 ),
               ),
 
@@ -44,10 +53,6 @@ class VariantCard extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                   ),
-                  // Text(
-                  //   variant.,
-                  //   style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  // ),
                 ],
               ),
             ],
@@ -58,9 +63,9 @@ class VariantCard extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: variant.sizeRanges.map((stock) {
+              children: displaySizes.map((stock) {
                 return Container(
-                  width: 90,
+                  width: 100,
                   margin: const EdgeInsets.only(right: 8),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -80,14 +85,14 @@ class VariantCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${9} Sets",
+                        "${stock.stock} Sets",
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           color: AppColors.primary,
                         ),
                       ),
                       Text(
-                        "${stock.stock} pcs/set",
+                        "${AppConstants.pieceCount[type][stock.sizeRange]} pcs/set",
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -99,18 +104,19 @@ class VariantCard extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(80, 35),
+          if (!isOutofStock)
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(80, 35),
+                ),
+                child: const Text("Order"),
               ),
-              child: const Text("Order"),
             ),
-          ),
         ],
       ),
     );

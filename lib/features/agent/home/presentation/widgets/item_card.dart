@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
+import 'package:xlapparals_app/core/utils/stock_validators.dart';
 import 'package:xlapparals_app/features/agent/home/domain/entities/item.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/expand_item/item_bloc.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/expand_item/item_event.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/expand_item/item_state.dart';
+import 'package:xlapparals_app/features/agent/home/presentation/widgets/stock_badge.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/widgets/variant_card.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:xlapparals_app/shared/widgets/zoom_image.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
@@ -22,10 +24,16 @@ class ItemCard extends StatelessWidget {
       builder: (context, state) {
         final expanded = state.expandeditems.contains("${item.id}");
 
+        final allOut = isItemOutOfStock(item);
+        final partialOut = isItemPartiallyOutOfStock(item);
+
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.border),
+            color: allOut ? const Color(0xFFFFF1F1) : Colors.white,
+            border: Border.all(
+              color: allOut ? Colors.red.shade200 : AppColors.border,
+            ),
             borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           ),
           child: Column(
@@ -42,11 +50,10 @@ class ItemCard extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
+                        child: ZoomableImage(
                           imageUrl: item.variants[0].image,
                           width: 55,
                           height: 55,
-                          fit: BoxFit.cover,
                         ),
                       ),
 
@@ -104,14 +111,16 @@ class ItemCard extends StatelessWidget {
                                   ),
                                 ),
 
-                                // if ()
-                                //   const Padding(
-                                //     padding: EdgeInsets.only(left: 12),
-                                //     child: Text(
-                                //       "Some out",
-                                //       style: TextStyle(color: Colors.red),
-                                //     ),
-                                //   ),
+                                if (allOut)
+                                  StockBadge(
+                                    label: "Out of stock",
+                                    color: Colors.red,
+                                  )
+                                else if (partialOut)
+                                  StockBadge(
+                                    label: "Some out",
+                                    color: Colors.orange,
+                                  ),
                               ],
                             ),
                           ],
@@ -138,6 +147,8 @@ class ItemCard extends StatelessWidget {
                         .entries
                         .map(
                           (entry) => VariantCard(
+                            isOutofStock: allOut,
+                            type: item.type,
                             variant: entry.value,
                             index: (entry.key) + 1,
                           ),
