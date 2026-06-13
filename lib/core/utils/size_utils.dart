@@ -1,6 +1,7 @@
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/features/agent/home/domain/entities/size_range.dart';
 import 'package:xlapparals_app/features/agent/home/domain/entities/variant.dart';
+import 'package:xlapparals_app/features/agent/orders/order_items/domain/entities/size.dart';
 
 class SizeRangeUtils {
   static List<SizeRange> getSizeRangesWithStock(
@@ -45,5 +46,42 @@ class SizeRangeUtils {
     }
 
     return result;
+  }
+
+  static List<ItemSize> getAvailableSizes({
+    required List<ItemSize> variantSizes,
+    required String itemType,
+  }) {
+    final availableRanges =
+        AppConstants.orderCreationSizesByType[itemType] ?? <String>[];
+
+    final variantSizeNames = variantSizes.map((e) => e.sizeRange).toSet();
+
+    if (itemType == "gents") {
+      for (final range in availableRanges) {
+        final rangeSizes = AppConstants.sizeRangeToSizes[range] ?? [];
+
+        final rangeSet = rangeSizes.toSet();
+
+        final exactMatch =
+            rangeSet.length == variantSizeNames.length &&
+            rangeSet.every((size) => variantSizeNames.contains(size));
+
+        if (exactMatch) {
+          return [ItemSize(id: 0, sizeRange: range, stock: 0)];
+        }
+      }
+
+      return variantSizes;
+    }
+
+    return availableRanges
+        .where((range) {
+          final requiredSizes = AppConstants.sizeRangeToSizes[range] ?? [];
+
+          return requiredSizes.every((size) => variantSizeNames.contains(size));
+        })
+        .map((range) => ItemSize(id: 0, sizeRange: range, stock: 0))
+        .toList();
   }
 }

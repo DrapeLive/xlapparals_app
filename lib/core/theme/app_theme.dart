@@ -8,6 +8,11 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.secondary,
     useMaterial3: true,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.secondary,
+      shadowColor: AppColors.secondary,
+      foregroundColor: AppColors.primary,
+    ),
 
     textTheme: TextTheme(
       displayLarge: GoogleFonts.plusJakartaSans(

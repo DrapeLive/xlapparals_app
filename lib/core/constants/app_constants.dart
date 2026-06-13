@@ -14,9 +14,8 @@ class AppConstants {
       "26-36": 6,
       "32-38": 4,
       "32-36": 3,
-      "20-24": 1
+      "20-24": 3,
     },
-
   };
 
   static const Map<String, List<String>> orderCreationSizesByType = {
@@ -43,6 +42,7 @@ class AppConstants {
       "20-30": ["20-24", "26-30"],
       "32-38": ["32-36", "38"],
       "32-36": ["32-36"],
+      "38": ["38"],
     },
     "gents": {
       "S,M,L,XL": ["S", "M,L,XL"],
