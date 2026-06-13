@@ -32,6 +32,10 @@
 		<dict>
 			<key>UIApplicationSupportsMultipleScenes</key>
 			<false/>
+			<key>LSSupportsOpeningDocumentsInPlace</key>
+            <true/>
+            <key>UIFileSharingEnabled</key>
+            <true/>
 			<key>UISceneConfigurations</key>
 			<dict>
 				<key>UIWindowSceneSessionRoleApplication</key>
