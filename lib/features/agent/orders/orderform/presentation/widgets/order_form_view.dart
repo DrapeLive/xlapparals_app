@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:xlapparals_app/core/routes/route_name.dart';
+import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/presentation/bloc/order_form_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/presentation/bloc/order_form_event.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/presentation/bloc/order_form_states.dart';
@@ -14,7 +17,14 @@ class OrderInvoiceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Order Form")),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go(RouteNames.agentHome);
+          },
+        ),
+      ),
       body: BlocBuilder<OrderInvoiceBloc, OrderInvoiceState>(
         builder: (context, state) {
           if (state is OrderInvoiceLoading) {
@@ -35,28 +45,42 @@ class OrderInvoiceView extends StatelessWidget {
                 children: [
                   BrandSection(invoice: invoice),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
+                  Divider(height: 5, color: AppColors.primary),
 
-                  Center(
-                    child: Text(
-                      "ORDER FORM",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 12),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "ORDER FORM",
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 16),
+                      Column(
+                        children: [
+                          Text(
+                            "Order Form #${invoice.id}",
+                            style: TextStyle(color: AppColors.primary),
+                          ),
 
-                  Text("Order Form #${invoice.id}"),
+                          Text(
+                            "Date : ${DateFormat('dd/MM/yyyy').format(invoice.createdAt)}",
+                            style: TextStyle(color: AppColors.primary),
+                          ),
 
-                  Text(
-                    "Date : ${DateFormat('dd/MM/yyyy').format(invoice.createdAt)}",
-                  ),
-
-                  Text(
-                    "Time : ${DateFormat('hh:mm:ss a').format(invoice.createdAt)}",
+                          Text(
+                            "Time : ${DateFormat('hh:mm:ss a').format(invoice.createdAt)}",
+                            style: TextStyle(color: AppColors.primary),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 24),
@@ -88,6 +112,10 @@ class OrderInvoiceView extends StatelessWidget {
                           },
                           icon: const Icon(Icons.download),
                           label: const Text("Download"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.secondary,
+                          ),
                         ),
                       ),
 
@@ -102,6 +130,10 @@ class OrderInvoiceView extends StatelessWidget {
                           },
                           icon: const Icon(Icons.print),
                           label: const Text("Print"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.secondary,
+                          ),
                         ),
                       ),
                     ],

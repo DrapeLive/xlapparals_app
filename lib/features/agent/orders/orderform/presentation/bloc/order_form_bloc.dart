@@ -1,12 +1,15 @@
 import 'dart:typed_data';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
-
+import 'package:flutter/services.dart';
 import '../../domain/repositories/order_form_repository.dart';
 import 'order_form_event.dart';
 import 'order_form_states.dart';
+
+import 'package:file_saver/file_saver.dart';
 
 class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
   final OrderInvoiceRepository repository;
@@ -15,6 +18,20 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     on<LoadOrderInvoice>(_loadInvoice);
     on<DownloadInvoice>(_downloadInvoice);
     on<PrintInvoice>(_printInvoice);
+  }
+
+  Future<void> savePdfToDownloads({
+    required Uint8List pdfBytes,
+    required int orderId,
+  }) async {
+    final result = await FileSaver.instance.saveFile(
+      name: 'invoice_$orderId',
+      bytes: pdfBytes,
+      fileExtension: 'pdf',
+      mimeType: MimeType.pdf,
+    );
+
+    debugPrint('Saved to: $result');
   }
 
   Future<void> _loadInvoice(
@@ -39,9 +56,11 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     try {
       emit(OrderInvoiceDownloading());
 
-      await repository.downloadPdf(event.orderId);
-
       final invoice = await repository.getInvoice(event.orderId);
+
+      final pdfBytes = await _generateInvoicePdf(invoice);
+
+      await savePdfToDownloads(pdfBytes: pdfBytes, orderId: event.orderId);
 
       emit(OrderInvoiceLoaded(invoice));
     } catch (e) {
@@ -69,8 +88,16 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
   }
 
   Future<Uint8List> _generateInvoicePdf(OrderInvoice invoice) async {
-    final pdf = pw.Document();
+    final regularFont = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/NotoSans-Regular.ttf'),
+    );
 
+    final boldFont = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/NotoSans-Bold.ttf'),
+    );
+    final pdf = pw.Document(
+      theme: pw.ThemeData.withFont(base: regularFont, bold: boldFont),
+    );
     final gstAmount = invoice.totalPrice * invoice.gstRate / 100;
 
     final grandTotal = invoice.totalPrice + gstAmount;

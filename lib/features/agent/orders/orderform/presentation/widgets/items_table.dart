@@ -1,5 +1,6 @@
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 import 'package:flutter/material.dart';
+import 'package:xlapparals_app/core/theme/app_colors.dart';
 
 class ItemsTable extends StatelessWidget {
   final OrderInvoice invoice;
@@ -19,12 +20,29 @@ class ItemsTable extends StatelessWidget {
       },
       children: [
         const TableRow(
+          decoration: BoxDecoration(color: AppColors.primary),
           children: [
-            Padding(padding: EdgeInsets.all(8), child: Text("Item")),
-            Padding(padding: EdgeInsets.all(8), child: Text("Size")),
-            Padding(padding: EdgeInsets.all(8), child: Text("Price")),
-            Padding(padding: EdgeInsets.all(8), child: Text("Qty")),
-            Padding(padding: EdgeInsets.all(8), child: Text("Amount")),
+            Center(
+              child: Text("Item", style: TextStyle(color: AppColors.secondary)),
+            ),
+            Center(
+              child: Text("Size", style: TextStyle(color: AppColors.secondary)),
+            ),
+            Center(
+              child: Text(
+                "Price",
+                style: TextStyle(color: AppColors.secondary),
+              ),
+            ),
+            Center(
+              child: Text("Qty", style: TextStyle(color: AppColors.secondary)),
+            ),
+            Center(
+              child: Text(
+                "Amount",
+                style: TextStyle(color: AppColors.secondary),
+              ),
+            ),
           ],
         ),
 

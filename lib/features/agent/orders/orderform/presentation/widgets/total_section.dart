@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 
 class TotalsSection extends StatelessWidget {
@@ -19,17 +20,28 @@ class TotalsSection extends StatelessWidget {
         children: [
           Text(
             "TOTAL PIECES: ${invoice.items.fold(0, (sum, item) => sum + (item.quantity * item.pieceCount))}",
+            style: TextStyle(color: AppColors.primary),
           ),
 
-          Text("SUBTOTAL: ₹${invoice.totalPrice}"),
+          Text(
+            "SUBTOTAL: ₹${invoice.totalPrice}",
+            style: TextStyle(color: AppColors.primary),
+          ),
 
-          Text("GST @ ${invoice.gstRate}% : ₹$gst"),
+          Text(
+            "GST @ ${invoice.gstRate}% : ₹$gst",
+            style: TextStyle(color: AppColors.primary),
+          ),
 
           const SizedBox(height: 10),
 
           Text(
             "TOTAL : ₹$grandTotal",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
           ),
         ],
       ),
