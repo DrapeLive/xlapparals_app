@@ -73,15 +73,33 @@ class SizeRangeUtils {
       }
 
       return variantSizes;
+    } else if (itemType == "kids") {
+      return availableRanges
+          .where((range) {
+            final requiredSizes = AppConstants.sizeRangeToSizes[range] ?? [];
+
+            return requiredSizes.every(
+              (size) => variantSizeNames.contains(size),
+            );
+          })
+          .map((range) {
+            final requiredSizes = AppConstants.sizeRangeToSizes[range] ?? [];
+
+            final matchingSizes = variantSizes
+                .where((item) => requiredSizes.contains(item.sizeRange))
+                .toList();
+
+            final stock = matchingSizes.isEmpty
+                ? 0
+                : matchingSizes
+                      .map((e) => e.stock)
+                      .reduce((a, b) => a < b ? a : b);
+
+            return ItemSize(id: 0, sizeRange: range, stock: stock);
+          })
+          .where((item) => item.stock > 0)
+          .toList();
     }
-
-    return availableRanges
-        .where((range) {
-          final requiredSizes = AppConstants.sizeRangeToSizes[range] ?? [];
-
-          return requiredSizes.every((size) => variantSizeNames.contains(size));
-        })
-        .map((range) => ItemSize(id: 0, sizeRange: range, stock: 0))
-        .toList();
+    return [];
   }
 }
