@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
+import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/bottom_nav/bottom_nav_bloc.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/bottom_nav/bottom_nav_event.dart';
@@ -100,7 +102,9 @@ class _HomePageState extends State<HomePage> {
                       actionsPadding: const EdgeInsets.only(right: 15),
                       actions: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            context.go(RouteNames.agentProfile);
+                          },
                           child: Container(
                             height: 50,
                             padding: const EdgeInsets.all(8),
@@ -168,7 +172,9 @@ class _HomePageState extends State<HomePage> {
                               isSelect: navState.selectedIndex == 1,
                               icon: Icons.receipt_long,
                               text: "Orders",
-                              onPress: () {},
+                              onPress: () {
+                                context.go(RouteNames.agentOrderCustomers);
+                              },
                               onTap: () {
                                 context.read<BottomNavBloc>().add(
                                   ChangeTabEvent(1),
