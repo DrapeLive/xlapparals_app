@@ -11,11 +11,39 @@ class SizeDropdown extends StatelessWidget {
   final List<ItemSize> sizes;
 
   const SizeDropdown({super.key, required this.sizes});
+
+  String? _getDefaultValue(ItemDetailsState state, List<ItemSize> sizes) {
+    if (state.selectedSize != null) {
+      return state.selectedSize!.sizeRange;
+    }
+
+    final size2036 = sizes.where((e) => e.sizeRange == '20-36' && e.stock > 0);
+
+    if (size2036.isNotEmpty) {
+      return '20-36';
+    }
+
+    final size2030 = sizes.where((e) => e.sizeRange == '20-30' && e.stock > 0);
+
+    if (size2030.isNotEmpty) {
+      return '20-30';
+    }
+
+    if (sizes.isNotEmpty) {
+      return sizes.first.sizeRange;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ItemDetailsBloc, ItemDetailsState>(
       builder: (context, state) {
+        final selectedValue = _getDefaultValue(state, sizes);
+
         return DropdownButtonFormField<String>(
+          initialValue: selectedValue,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
@@ -30,23 +58,25 @@ class SizeDropdown extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.border),
             ),
             fillColor: AppColors.secondary,
-            iconColor: AppColors.primary,
           ),
-          initialValue: state.selectedSize?.sizeRange,
-          items: state.availableSizes.map((size) {
+          iconEnabledColor: AppColors.primary,
+          items: sizes.map((size) {
             return DropdownMenuItem<String>(
               value: size.sizeRange,
-              child: Text(size.sizeRange),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text(size.sizeRange), Text('${size.stock}')],
+              ),
             );
           }).toList(),
           onChanged: (value) {
-            if (value != null) {
-              final selectedSize = state.availableSizes.firstWhere(
-                (size) => size.sizeRange == value,
-              );
+            if (value == null) return;
 
-              context.read<ItemDetailsBloc>().add(ChangeSize(selectedSize));
-            }
+            final selectedSize = sizes.firstWhere(
+              (size) => size.sizeRange == value,
+            );
+
+            context.read<ItemDetailsBloc>().add(ChangeSize(selectedSize));
           },
         );
       },

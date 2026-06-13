@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-import 'package:flutter/rendering.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -10,6 +9,7 @@ import 'order_form_event.dart';
 import 'order_form_states.dart';
 
 import 'package:file_saver/file_saver.dart';
+import 'package:intl/intl.dart';
 
 class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
   final OrderInvoiceRepository repository;
@@ -24,14 +24,12 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     required Uint8List pdfBytes,
     required int orderId,
   }) async {
-    final result = await FileSaver.instance.saveFile(
+    await FileSaver.instance.saveFile(
       name: 'invoice_$orderId',
       bytes: pdfBytes,
       fileExtension: 'pdf',
       mimeType: MimeType.pdf,
     );
-
-    debugPrint('Saved to: $result');
   }
 
   Future<void> _loadInvoice(
@@ -107,9 +105,38 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
       (sum, item) => sum + (item.quantity * item.pieceCount),
     );
 
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 2,
+    );
+
+    final dio = Dio();
+
+    pw.MemoryImage? logoImage;
+
+    try {
+      final response = await dio.get<List<int>>(
+        invoice.brand.logoUrl,
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      if (response.data != null) {
+        logoImage = pw.MemoryImage(Uint8List.fromList(response.data!));
+      }
+    } catch (e) {}
+
     pdf.addPage(
       pw.MultiPage(
         build: (context) => [
+          pw.Center(
+            child: pw.Image(
+              logoImage!,
+              width: 100,
+              height: 100,
+              fit: pw.BoxFit.contain,
+            ),
+          ),
           pw.Center(
             child: pw.Text(
               invoice.brand.name,
@@ -172,14 +199,15 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
           pw.TableHelper.fromTextArray(
             headers: const ["Item", "Size", "Price", "Qty", "Amount"],
             data: invoice.items.map((item) {
-              final amount = item.itemPrice * item.quantity * item.pieceCount;
+              final price = double.tryParse(item.itemPrice) ?? 0.0;
+              final amount = price * item.quantity * item.pieceCount;
 
               return [
                 item.itemName,
                 item.sizeGroup,
                 item.itemPrice,
                 "${item.quantity} x ${item.pieceCount}",
-                amount,
+                currencyFormatter.format(amount),
               ];
             }).toList(),
           ),
@@ -192,13 +220,15 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
               crossAxisAlignment: pw.CrossAxisAlignment.end,
               children: [
                 pw.Text("TOTAL PIECES : $totalPieces"),
-                pw.Text("SUBTOTAL : ₹${invoice.totalPrice.toStringAsFixed(2)}"),
                 pw.Text(
-                  "GST @ ${invoice.gstRate}% : ₹${gstAmount.toStringAsFixed(2)}",
+                  "SUBTOTAL :   ${currencyFormatter.format(invoice.totalPrice)}",
+                ),
+                pw.Text(
+                  "GST @ ${invoice.gstRate}% : ${currencyFormatter.format(gstAmount)}",
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  "TOTAL : ₹${grandTotal.toStringAsFixed(2)}",
+                  "TOTAL : ${currencyFormatter.format(grandTotal)}",
                   style: pw.TextStyle(
                     fontWeight: pw.FontWeight.bold,
                     fontSize: 16,
