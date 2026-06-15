@@ -21,6 +21,7 @@ class HistoryPage extends StatelessWidget {
         final order = orders[index];
 
         return OrderCard(
+          id: order.id,
           customerName: order.customerName,
           agentName: order.agentName,
           date: formatDate(order.createdAt),
