@@ -6,7 +6,7 @@ import 'agent_details.dart';
 class OrderDetails {
   final int id;
 
-  final List<OrderItem> items;
+  final List<OrderDetailsItem> items;
 
   final AgentDetails agentDetails;
 
@@ -17,17 +17,23 @@ class OrderDetails {
 
   final String status;
 
-  final String? expectedDeliveryDate;
+  final DateTime? expectedDeliveryDate;
 
-  final String? preferredTransport;
+  final String lrNumber;
+
+  final int? preferredTransport;
 
   final String? transportCompany;
 
+  final DateTime createdAt;
+
   const OrderDetails({
+    required this.createdAt,
     required this.id,
     required this.items,
     required this.agentDetails,
     required this.customerDetails,
+    required this.lrNumber,
     required this.totalSets,
     required this.totalPieces,
     required this.status,

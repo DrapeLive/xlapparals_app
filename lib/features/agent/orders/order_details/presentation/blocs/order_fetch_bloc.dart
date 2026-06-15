@@ -7,6 +7,9 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
   final OrderDetailsRepository repository;
 
   OrderDetailsBloc(this.repository) : super(const OrderDetailsState()) {
+    on<StartEditOrder>(_startEdit);
+    on<DeleteOrder>(_deleteOrder);
+    on<DeleteOrderItem>(_deleteOrderItem);
     on<FetchOrderDetails>(_fetch);
     on<RefreshOrderDetails>(_refresh);
     on<PickDeliveryDate>((event, emit) {
@@ -65,5 +68,31 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
       emit(state.copyWith(status: OrderDetailsStatus.success, order: order));
     } catch (_) {}
+  }
+
+  Future<void> _startEdit(
+    StartEditOrder event,
+    Emitter<OrderDetailsState> emit,
+  ) async {
+    emit(state.copyWith(loadingTransports: true));
+
+    await repository.startEditOrder(event.orderId);
+  }
+
+  Future<void> _deleteOrder(
+    DeleteOrder event,
+    Emitter<OrderDetailsState> emit,
+  ) async {
+    await repository.deleteOrder(event.orderId);
+  }
+
+  Future<void> _deleteOrderItem(
+    DeleteOrderItem event,
+    Emitter<OrderDetailsState> emit,
+  ) async {
+    await repository.deleteItemOrder(
+      orderId: event.orderId,
+      itemId: event.itemId,
+    );
   }
 }

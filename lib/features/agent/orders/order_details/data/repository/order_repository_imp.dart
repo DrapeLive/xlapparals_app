@@ -32,4 +32,22 @@ class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
       transportId: transportId,
     );
   }
+
+  @override
+  Future<void> startEditOrder(int orderId) async {
+    await remoteDatasource.startEditOrder(orderId);
+  }
+
+  @override
+  Future<void> deleteOrder(int orderId) async {
+    await remoteDatasource.deleteOrder(orderId);
+  }
+
+  @override
+  Future<void> deleteItemOrder({
+    required int orderId,
+    required int itemId,
+  }) async {
+    await remoteDatasource.deleteItemOrder(orderId: orderId, itemId: itemId);
+  }
 }

@@ -5,12 +5,20 @@ import 'package:dio/dio.dart';
 
 abstract class OrderDetailsRemoteDatasource {
   Future<OrderDetailsModel> getOrderDetails(int orderId);
+
   Future<List<Transport>> getTransports();
+
   Future<void> placeOrderRemote({
     required int orderId,
     DateTime? expectedDate,
     int? transportId,
   });
+
+  Future<void> startEditOrder(int orderId);
+
+  Future<void> deleteOrder(int orderId);
+
+  Future<void> deleteItemOrder({required int orderId, required int itemId});
 }
 
 class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
@@ -22,7 +30,6 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
   Future<OrderDetailsModel> getOrderDetails(int orderId) async {
     final response = await dio.get("/orders/$orderId/");
     final data = OrderDetailsModel.fromJson(response.data);
-
     return data;
   }
 
@@ -51,5 +58,23 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
         'preferred_transport': transportId,
       },
     );
+  }
+
+  @override
+  Future<void> startEditOrder(int orderId) async {
+    await dio.post('/orders/$orderId/start-edit/');
+  }
+
+  @override
+  Future<void> deleteOrder(int orderId) async {
+    await dio.delete('/orders/$orderId/');
+  }
+
+  @override
+  Future<void> deleteItemOrder({
+    required int orderId,
+    required int itemId,
+  }) async {
+    await dio.delete("/orders/$orderId/delete-item/$itemId/");
   }
 }

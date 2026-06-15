@@ -33,3 +33,21 @@ class PlaceOrder extends OrderDetailsEvent {
 
   PlaceOrder(this.orderId);
 }
+
+class StartEditOrder extends OrderDetailsEvent {
+  final int orderId;
+
+  StartEditOrder(this.orderId);
+}
+
+class DeleteOrder extends OrderDetailsEvent {
+  final int orderId;
+
+  DeleteOrder(this.orderId);
+}
+
+class DeleteOrderItem extends OrderDetailsEvent {
+  final int orderId;
+  final int itemId;
+  DeleteOrderItem(this.orderId, this.itemId);
+}

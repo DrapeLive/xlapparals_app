@@ -124,7 +124,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
                 const SizedBox(height: 5),
 
-                OrderItemsSection(items: order.items),
+                OrderItemsSection(items: order.items, orderId: order.id),
 
                 const SizedBox(height: 16),
 

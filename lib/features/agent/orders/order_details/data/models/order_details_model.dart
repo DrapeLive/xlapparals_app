@@ -6,6 +6,8 @@ import 'order_item_model.dart';
 
 class OrderDetailsModel extends OrderDetails {
   OrderDetailsModel({
+    required super.createdAt,
+    required super.lrNumber,
     required super.id,
     required super.items,
     required super.agentDetails,
@@ -36,11 +38,16 @@ class OrderDetailsModel extends OrderDetails {
 
       status: json["status"] ?? "",
 
-      expectedDeliveryDate: json["expected_delivery_date"],
+      lrNumber: json["lr_number"],
+
+      expectedDeliveryDate: json["expected_delivery_date"] == null
+          ? null
+          : DateTime.parse(json["expected_delivery_date"] as String),
 
       preferredTransport: json["preferred_transport"],
 
       transportCompany: json["transport_company"],
+      createdAt: DateTime.parse(json['created_at']),
     );
   }
 }
