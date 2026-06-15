@@ -8,6 +8,7 @@ import 'package:xlapparals_app/features/agent/home/presentation/blocs/orders/ord
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/customer_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/customer_event.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/order_bloc.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/presentation/bloc/edit_order_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/agent_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/presentation/blocs/item_details_bloc.dart';
@@ -39,6 +40,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => sl<ScanBloc>()),
         BlocProvider(create: (_) => sl<ItemDetailsBloc>()),
         BlocProvider(create: (_) => sl<AgentBloc>()),
+        BlocProvider(create: (_) => sl<EditOrderBloc>()),
       ],
       child: MaterialApp.router(
         title: AppConstants.appName,
