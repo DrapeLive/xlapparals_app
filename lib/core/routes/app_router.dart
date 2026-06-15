@@ -2,7 +2,9 @@ import 'package:go_router/go_router.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/pages/home_page.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/pages/customer_order_page.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/presentation/pages/edit_order_page.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/pages/order_detail_page.dart';
+import 'package:xlapparals_app/features/agent/orders/order_details/presentation/pages/order_inform_page.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/presentation/pages/item_details_page.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/presentation/page/order_form_page.dart';
 import 'package:xlapparals_app/features/agent/orders/scanner/presentation/pages/scan_page.dart';
@@ -79,6 +81,24 @@ class AppRouter {
           final orderId = state.extra as int;
 
           return OrderInvoicePage(orderId: orderId);
+        },
+      ),
+
+      GoRoute(
+        path: RouteNames.orderInform,
+        builder: (context, state) {
+          final orderId = state.extra as int;
+
+          return OrderInformPage(orderId: orderId);
+        },
+      ),
+
+      GoRoute(
+        path: RouteNames.editOrder,
+        builder: (context, state) {
+          final orderId = state.extra as int;
+
+          return EditOrderPage(orderId: orderId);
         },
       ),
     ],

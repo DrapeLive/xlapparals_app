@@ -10,4 +10,6 @@ class RouteNames {
   static const scanner = "/agent/order/scanner";
   static const orderItems = '/agent/order/order-items';
   static const po = '/agent/order/po';
+  static const orderInform = '/agent/order-inform';
+  static const editOrder = '/agent/edit-order';
 }
