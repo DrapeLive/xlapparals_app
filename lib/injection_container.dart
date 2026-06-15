@@ -18,6 +18,10 @@ import 'package:xlapparals_app/features/agent/orders/customers/domain/repository
 import 'package:xlapparals_app/features/agent/orders/customers/domain/repository/order_repository.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/customer_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/order_bloc.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/data/data_source/edit_order_data_source.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/data/repositories/edit_order_repository_impl.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/domain/repositories/edit_order_repository.dart';
+import 'package:xlapparals_app/features/agent/orders/edit_order/presentation/bloc/edit_order_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/data/datasource/order_remote_data_source.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/data/repository/order_repository_imp.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/domain/repository/order_repository.dart';
@@ -172,4 +176,14 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => OrderInvoiceBloc(sl<OrderInvoiceRepository>()));
+
+  sl.registerLazySingleton<EditOrderRemoteDatasource>(
+    () => EditOrderRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<EditOrderRepository>(
+    () => EditOrderRepositoryImpl(sl<EditOrderRemoteDatasource>()),
+  );
+
+  sl.registerFactory(() => EditOrderBloc(sl<EditOrderRepository>()));
 }
