@@ -5,7 +5,6 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/scanner/presentation/widgets/scan_overlay_widget.dart';
-import 'package:xlapparals_app/shared/widgets/app_toast.dart';
 
 import '../blocs/scan_bloc.dart';
 import '../blocs/scan_event.dart';
@@ -87,7 +86,34 @@ class _ScanItemPageState extends State<ScanItemPage> {
         }
 
         if (state is ScanError) {
-          AppToast.show(context, message: state.message, type: ToastType.error);
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('The QR is Invalid'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.go(
+                        RouteNames.orderDetails,
+                        extra: widget.orderId,
+                      );
+                    },
+                    child: const Text('Back'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+
+                      await _restartScanner();
+                    },
+                    child: const Text('Scan Another Item'),
+                  ),
+                ],
+              );
+            },
+          );
 
           await _restartScanner();
         }
