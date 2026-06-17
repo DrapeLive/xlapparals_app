@@ -3,6 +3,7 @@ class AppConstants {
 
   static const String appName = "XL Apparals";
   static const double borderRadius = 12;
+  static const String fontFamily = "PlusJakartaSans";
 
   static const Map<dynamic, dynamic> pieceCount = {
     "gents": {"M,L,XL": 3, "M,L,XL,XXL": 4, "S,M,L,XL": 4, "S,M,L,XL,XXL": 5},

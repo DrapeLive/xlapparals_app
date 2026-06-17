@@ -39,18 +39,11 @@ class OrderCard extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           border: Border.all(color: AppColors.border),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Column(
           children: [
@@ -67,19 +60,30 @@ class OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         customerName.toUpperCase(),
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+
+                      Text(
+                        agentName,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
                       ),
 
                       const SizedBox(height: 2),
 
                       Text(
-                        agentName,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        date,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                        ),
                       ),
-
-                      const SizedBox(height: 2),
-
-                      Text(date, style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -87,11 +91,11 @@ class OrderCard extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 5),
+            const SizedBox(height: 3),
 
             Divider(color: AppColors.border),
 
-            const SizedBox(height: 5),
+            const SizedBox(height: 3),
             Row(
               children: [
                 Expanded(
@@ -103,25 +107,36 @@ class OrderCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: "$totalSets",
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
                             ),
-                            const TextSpan(text: " Sets"),
+                            const TextSpan(
+                              text: " Sets",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
 
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 5),
 
                       Container(
-                        width: 6,
-                        height: 6,
+                        width: 4,
+                        height: 4,
                         decoration: const BoxDecoration(
                           color: AppColors.border,
                           shape: BoxShape.circle,
                         ),
                       ),
 
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 5),
 
                       RichText(
                         text: TextSpan(
@@ -129,9 +144,20 @@ class OrderCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: "$totalPieces",
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
                             ),
-                            const TextSpan(text: " pcs"),
+                            const TextSpan(
+                              text: " pcs",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -141,7 +167,11 @@ class OrderCard extends StatelessWidget {
 
                 Text(
                   "₹${indianCurrency.format(amount)}",
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                   textAlign: TextAlign.end,
                 ),
               ],

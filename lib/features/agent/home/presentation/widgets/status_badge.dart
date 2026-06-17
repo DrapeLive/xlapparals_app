@@ -35,7 +35,7 @@ class StatusBadge extends StatelessWidget {
     final colors = _getColors();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: colors.bgColor,
         borderRadius: BorderRadius.circular(50),
@@ -43,7 +43,11 @@ class StatusBadge extends StatelessWidget {
       ),
       child: Text(
         status,
-        style: TextStyle(fontSize: 12, color: colors.textColor),
+        style: TextStyle(
+          fontSize: 9,
+          color: colors.textColor,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

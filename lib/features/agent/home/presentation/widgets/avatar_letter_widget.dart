@@ -30,8 +30,8 @@ class AvatarLetterWidget extends StatelessWidget {
     final letter = text.trim().isEmpty ? '?' : text[0].toUpperCase();
 
     return Container(
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: _getColor(letter),
