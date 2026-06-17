@@ -17,3 +17,9 @@ class PrintInvoice extends OrderInvoiceEvent {
 
   PrintInvoice(this.orderId);
 }
+
+class ShareInvoice extends OrderInvoiceEvent {
+  final int orderId;
+
+  ShareInvoice(this.orderId);
+}

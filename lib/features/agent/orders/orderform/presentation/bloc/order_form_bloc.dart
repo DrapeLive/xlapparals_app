@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 import 'package:flutter/services.dart';
 import '../../domain/repositories/order_form_repository.dart';
@@ -11,6 +15,10 @@ import 'order_form_states.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:intl/intl.dart';
 
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
 class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
   final OrderInvoiceRepository repository;
 
@@ -18,6 +26,7 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     on<LoadOrderInvoice>(_loadInvoice);
     on<DownloadInvoice>(_downloadInvoice);
     on<PrintInvoice>(_printInvoice);
+    on<ShareInvoice>(_shareInvoice);
   }
 
   Future<void> savePdfToDownloads({
@@ -59,6 +68,37 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
       final pdfBytes = await _generateInvoicePdf(invoice);
 
       await savePdfToDownloads(pdfBytes: pdfBytes, orderId: event.orderId);
+
+      emit(OrderInvoiceLoaded(invoice));
+    } catch (e) {
+      emit(OrderInvoiceError(e.toString()));
+    }
+  }
+
+  Future<void> _shareInvoice(
+    ShareInvoice event,
+    Emitter<OrderInvoiceState> emit,
+  ) async {
+    try {
+      emit(OrderInvoicePrinting());
+
+      final invoice = await repository.getInvoice(event.orderId);
+
+      final pdfBytes = await _generateInvoicePdf(invoice);
+
+      final tempDir = await getTemporaryDirectory();
+
+      final file = File('${tempDir.path}/invoice_${event.orderId}.pdf');
+
+      await file.writeAsBytes(pdfBytes);
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Invoice #${event.orderId}',
+          subject: 'Invoice #${event.orderId}',
+        ),
+      );
 
       emit(OrderInvoiceLoaded(invoice));
     } catch (e) {
@@ -129,51 +169,63 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     pdf.addPage(
       pw.MultiPage(
         build: (context) => [
-          pw.Center(
-            child: pw.Image(
-              logoImage!,
-              width: 100,
-              height: 100,
-              fit: pw.BoxFit.contain,
-            ),
-          ),
-          pw.Center(
-            child: pw.Text(
-              invoice.brand.name,
-              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
-            ),
-          ),
-
-          pw.SizedBox(height: 5),
-
-          pw.Center(child: pw.Text(invoice.brand.addressLine1)),
-
-          if (invoice.brand.addressLine2 != null)
-            pw.Center(child: pw.Text(invoice.brand.addressLine2!)),
-
-          pw.Center(child: pw.Text(invoice.brand.phone)),
-
-          pw.Center(child: pw.Text(invoice.brand.email)),
-
-          pw.Center(child: pw.Text("GST : ${invoice.brand.gst}")),
-
-          pw.SizedBox(height: 20),
-
-          pw.Center(
-            child: pw.Text(
-              "ORDER FORM",
-              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-            ),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Image(
+                logoImage!,
+                width: 100,
+                height: 100,
+                fit: pw.BoxFit.contain,
+              ),
+              pw.Column(
+                children: [
+                  pw.Text(
+                    invoice.brand.name,
+                    style: pw.TextStyle(
+                      fontSize: 22,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                  pw.Text(invoice.brand.addressLine1),
+                  if (invoice.brand.addressLine2 != null)
+                    pw.Text(invoice.brand.addressLine2!),
+                  pw.Text(invoice.brand.phone),
+                  pw.Text(invoice.brand.email),
+                  pw.Text("GST : ${invoice.brand.gst}"),
+                ],
+              ),
+            ],
           ),
 
           pw.SizedBox(height: 10),
+          pw.Divider(color: PdfColors.black, height: 4),
 
-          pw.Text("Order Form #${invoice.id}"),
+          pw.SizedBox(height: 10),
 
-          pw.Text("Status : ${invoice.status}"),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Text(
+                "ORDER FORM",
+                style: pw.TextStyle(
+                  fontSize: 18,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
 
-          pw.Text(
-            "Date : ${invoice.createdAt.day}/${invoice.createdAt.month}/${invoice.createdAt.year}",
+              pw.Column(
+                children: [
+                  pw.Text("Order Form #${invoice.id}"),
+
+                  pw.Text("Status : ${invoice.status}"),
+
+                  pw.Text(
+                    "Date : ${invoice.createdAt.day}/${invoice.createdAt.month}/${invoice.createdAt.year}",
+                  ),
+                ],
+              ),
+            ],
           ),
 
           pw.SizedBox(height: 20),

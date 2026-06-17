@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 import 'package:flutter/material.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
@@ -5,25 +6,30 @@ import 'package:xlapparals_app/core/theme/app_colors.dart';
 class ItemsTable extends StatelessWidget {
   final OrderInvoice invoice;
 
-  const ItemsTable(this.invoice);
+  ItemsTable(this.invoice);
+
+  final formattedAmount = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
 
   @override
   Widget build(BuildContext context) {
     return Table(
       border: TableBorder.all(),
       columnWidths: const {
-        0: FlexColumnWidth(3),
+        0: FlexColumnWidth(1.8),
         1: FlexColumnWidth(2),
-        2: FlexColumnWidth(2),
+        2: FlexColumnWidth(3),
         3: FlexColumnWidth(1.5),
-        4: FlexColumnWidth(2),
+        4: FlexColumnWidth(3),
       },
       children: [
         const TableRow(
           decoration: BoxDecoration(color: AppColors.primary),
           children: [
             Center(
-              child: Text("Item", style: TextStyle(color: AppColors.secondary)),
+              child: Text(
+                "Item",
+                style: TextStyle(color: AppColors.secondary, fontSize: 14),
+              ),
             ),
             Center(
               child: Text("Size", style: TextStyle(color: AppColors.secondary)),
@@ -50,25 +56,36 @@ class ItemsTable extends StatelessWidget {
           (item) => TableRow(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(item.itemName),
+                padding: const EdgeInsets.all(6),
+                child: Text(item.itemName, style: TextStyle(fontSize: 12)),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(item.sizeGroup),
+                padding: const EdgeInsets.all(6),
+                child: Text(item.sizeGroup, style: TextStyle(fontSize: 12)),
               ),
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text("₹${item.itemPrice}"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text("${item.quantity} x ${item.pieceCount}"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
                 child: Text(
-                  "₹${item.itemPrice * item.quantity * item.pieceCount}",
+                  "₹${item.itemPrice}",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(6),
+                child: Text(
+                  "${item.quantity} x ${item.pieceCount}",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(6),
+                child: Text(
+                  formattedAmount.format(
+                    (double.tryParse(item.itemPrice) ?? 0) *
+                        item.quantity *
+                        item.pieceCount,
+                  ),
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
             ],
