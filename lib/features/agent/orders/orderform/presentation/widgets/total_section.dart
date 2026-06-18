@@ -20,17 +20,17 @@ class TotalsSection extends StatelessWidget {
         children: [
           Text(
             "TOTAL PIECES: ${invoice.items.fold(0, (sum, item) => sum + (item.quantity * item.pieceCount))}",
-            style: TextStyle(color: AppColors.primary),
+            style: TextStyle(color: AppColors.primary, fontSize: 12),
           ),
 
           Text(
             "SUBTOTAL: ₹${invoice.totalPrice}",
-            style: TextStyle(color: AppColors.primary),
+            style: TextStyle(color: AppColors.primary, fontSize: 12),
           ),
 
           Text(
             "GST @ ${invoice.gstRate}% : ₹$gst",
-            style: TextStyle(color: AppColors.primary),
+            style: TextStyle(color: AppColors.primary, fontSize: 12),
           ),
 
           const SizedBox(height: 10),
@@ -38,7 +38,7 @@ class TotalsSection extends StatelessWidget {
           Text(
             "TOTAL : ₹$grandTotal",
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: AppColors.primary,
             ),

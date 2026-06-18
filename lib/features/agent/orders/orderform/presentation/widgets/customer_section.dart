@@ -18,7 +18,7 @@ class CustomerSection extends StatelessWidget {
           "CUSTOMER",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 13,
             color: AppColors.primary,
           ),
         ),
@@ -30,23 +30,30 @@ class CustomerSection extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.primary,
+            fontSize: 12,
           ),
         ),
 
         const SizedBox(height: 4),
 
-        Text(customer.address, style: TextStyle(color: AppColors.primary)),
+        Text(
+          customer.address,
+          style: TextStyle(color: AppColors.primary, fontSize: 10),
+        ),
 
         const SizedBox(height: 4),
 
-        Text(customer.contact, style: TextStyle(color: AppColors.primary)),
+        Text(
+          customer.contact,
+          style: TextStyle(color: AppColors.primary, fontSize: 10),
+        ),
 
         if (customer.gst.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
               "GST : ${customer.gst}",
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: AppColors.primary, fontSize: 10),
             ),
           ),
       ],

@@ -18,24 +18,26 @@ class AgentSection extends StatelessWidget {
           "AGENT",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 12,
             color: AppColors.primary,
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 2),
 
         Text(
           agent.username,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.primary,
+            fontSize: 12,
           ),
         ),
 
-        const SizedBox(height: 4),
-
-        Text(agent.contact, style: TextStyle(color: AppColors.primary)),
+        Text(
+          agent.contact,
+          style: TextStyle(color: AppColors.primary, fontSize: 10),
+        ),
       ],
     );
   }

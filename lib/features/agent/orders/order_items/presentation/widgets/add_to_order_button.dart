@@ -35,7 +35,7 @@ class AddToOrderButton extends StatelessWidget {
               )
             : const Text(
                 'Add To Order',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
       ),
     );

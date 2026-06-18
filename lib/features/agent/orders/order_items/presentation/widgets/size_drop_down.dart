@@ -65,7 +65,10 @@ class SizeDropdown extends StatelessWidget {
               value: size.sizeRange,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(size.sizeRange), Text('${size.stock}')],
+                children: [
+                  Text(size.sizeRange, style: TextStyle(fontSize: 12)),
+                  Text('${size.stock}', style: TextStyle(fontSize: 12)),
+                ],
               ),
             );
           }).toList(),

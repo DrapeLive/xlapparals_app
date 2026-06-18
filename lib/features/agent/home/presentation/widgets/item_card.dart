@@ -70,6 +70,8 @@ class ItemCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.primary,
+                                    fontSize: 11,
+                                    fontFamily: AppConstants.fontFamily,
                                   ),
                                 ),
 
@@ -77,8 +79,8 @@ class ItemCard extends StatelessWidget {
 
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                    horizontal: 6,
+                                    vertical: 1,
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.border,
@@ -87,7 +89,7 @@ class ItemCard extends StatelessWidget {
                                   child: Text(
                                     item.type,
                                     style: const TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 7,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -99,7 +101,14 @@ class ItemCard extends StatelessWidget {
 
                             Row(
                               children: [
-                                Text("${item.variants.length} variants"),
+                                Text(
+                                  "${item.variants.length} variants",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.primary,
+                                    fontFamily: AppConstants.fontFamily,
+                                  ),
+                                ),
 
                                 const SizedBox(width: 8),
 
@@ -108,6 +117,8 @@ class ItemCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.primary,
+                                    fontFamily: AppConstants.fontFamily,
+                                    fontSize: 12,
                                   ),
                                 ),
 

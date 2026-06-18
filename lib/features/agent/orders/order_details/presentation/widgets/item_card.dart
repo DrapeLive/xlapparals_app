@@ -48,12 +48,16 @@ class OrderInformItemCard extends StatelessWidget {
                     color: status == "PENDING"
                         ? AppColors.primary
                         : AppColors.green,
+                    fontSize: 12,
                   ),
                 ),
 
-                Text("Size: ${item.sizeGroup}"),
+                Text("Size: ${item.sizeGroup}", style: TextStyle(fontSize: 9)),
 
-                Text("${item.quantity} Set x ${item.pieceCount} pcs"),
+                Text(
+                  "${item.quantity} Set x ${item.pieceCount} pcs",
+                  style: TextStyle(fontSize: 8),
+                ),
               ],
             ),
           ),
@@ -64,7 +68,7 @@ class OrderInformItemCard extends StatelessWidget {
               Text(
                 "₹${item.totalPrice * item.pieceCount}",
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
@@ -72,7 +76,7 @@ class OrderInformItemCard extends StatelessWidget {
               Text(
                 "₹${item.unitPrice}",
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: FontWeight.w400,
                   color: AppColors.primary,
                 ),

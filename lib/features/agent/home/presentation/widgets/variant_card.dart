@@ -51,6 +51,8 @@ class VariantCard extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.primary,
+                      fontFamily: AppConstants.fontFamily,
+                      fontSize: 12,
                     ),
                   ),
                 ],
@@ -82,6 +84,8 @@ class VariantCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
+                          fontFamily: AppConstants.fontFamily,
+                          fontSize: 12,
                         ),
                       ),
                       Text(
@@ -89,11 +93,12 @@ class VariantCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           color: AppColors.primary,
+                          fontSize: 10,
                         ),
                       ),
                       Text(
                         "${AppConstants.pieceCount[type][stock.sizeRange]} pcs/set",
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 9),
                       ),
                     ],
                   ),
@@ -112,9 +117,9 @@ class VariantCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
-                  minimumSize: const Size(80, 35),
+                  minimumSize: const Size(60, 25),
                 ),
-                child: const Text("Order"),
+                child: const Text("Order", style: TextStyle(fontSize: 10)),
               ),
             ),
         ],

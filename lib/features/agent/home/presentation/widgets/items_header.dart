@@ -53,12 +53,12 @@ class _ItemsHeaderState extends State<ItemsHeader> {
                     hintText: 'Search items...',
                     hintStyle: TextStyle(
                       color: AppColors.textPrimary,
-                      fontSize: 14,
+                      fontSize: 11,
                     ),
                     prefixIcon: Icon(
                       Icons.search,
                       color: AppColors.textPrimary,
-                      size: 20,
+                      size: 16,
                     ),
                     suffixIcon: state.hasActiveFilters
                         ? IconButton(
@@ -169,7 +169,7 @@ class _TabButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 9,
                   fontWeight: FontWeight.bold,
                   color: isActive ? Colors.black : AppColors.primary,
                 ),
@@ -186,7 +186,7 @@ class _TabButton extends StatelessWidget {
                 child: Text(
                   '$count',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 8,
                     fontWeight: FontWeight.bold,
                     color: isActive ? AppColors.primary : Colors.grey.shade500,
                   ),

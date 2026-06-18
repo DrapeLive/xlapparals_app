@@ -26,13 +26,13 @@ class CustomerTile extends StatelessWidget {
             const Expanded(
               child: Text(
                 "My Customers",
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
               ),
             ),
             CircleAvatar(
               radius: 12,
               backgroundColor: Colors.grey.shade200,
-              child: Text("$count", style: const TextStyle(fontSize: 12)),
+              child: Text("$count", style: const TextStyle(fontSize: 10)),
             ),
             const SizedBox(width: 8),
             const Icon(Icons.chevron_right),

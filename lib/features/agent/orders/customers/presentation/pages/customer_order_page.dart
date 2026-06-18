@@ -67,111 +67,120 @@ class _CreateOrderCustomerPageState extends State<CreateOrderCustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CreateOrderBloc, CreateOrderState>(
-      listener: (context, orderState) {
-        if (orderState.status == CreateOrderStatus.success) {
-          context.push(RouteNames.orderDetails, extra: orderState.order?.id);
-        }
-
-        if (orderState.status == CreateOrderStatus.failure) {
-          ErrorPage(
-            message: "Failed to create order",
-            onRetry: () {
-              context.go(RouteNames.agentOrderCustomers);
-            },
-          );
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          context.go(RouteNames.agentHome);
         }
       },
-      builder: (context, orderState) {
-        return Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    context.go(RouteNames.agentHome);
-                  },
+      child: BlocConsumer<CreateOrderBloc, CreateOrderState>(
+        listener: (context, orderState) {
+          if (orderState.status == CreateOrderStatus.success) {
+            context.push(RouteNames.orderDetails, extra: orderState.order?.id);
+          }
+
+          if (orderState.status == CreateOrderStatus.failure) {
+            ErrorPage(
+              message: "Failed to create order",
+              onRetry: () {
+                context.go(RouteNames.agentOrderCustomers);
+              },
+            );
+          }
+        },
+        builder: (context, orderState) {
+          return Stack(
+            children: [
+              Scaffold(
+                appBar: AppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      context.go(RouteNames.agentHome);
+                    },
+                  ),
                 ),
-              ),
-              body: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: TextField(
-                      onChanged: (value) {
-                        context.read<CustomerBloc>().add(
-                          SearchCustomers(value),
-                        );
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Search customer...",
-                        prefixIcon: const Icon(Icons.search),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: AppColors.border),
+                body: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: TextField(
+                        onChanged: (value) {
+                          context.read<CustomerBloc>().add(
+                            SearchCustomers(value),
+                          );
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search customer...",
+                          prefixIcon: const Icon(Icons.search, size: 14),
+                          hintStyle: TextStyle(fontSize: 12),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(color: AppColors.border),
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  Expanded(
-                    child: BlocBuilder<CustomerBloc, CustomerState>(
-                      builder: (context, customerState) {
-                        if (customerState.status == CustomerStatus.loading &&
-                            customerState.customers.isEmpty) {
-                          return const LoadingPage(
-                            message: "Fetching Customers...",
-                          );
-                        }
-
-                        if (customerState.customers.isEmpty) {
-                          return const Center(
-                            child: Text("No customers found"),
-                          );
-                        }
-
-                        return ListView.builder(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount:
-                              customerState.customers.length +
-                              (customerState.hasReachedMax ? 0 : 1),
-                          itemBuilder: (context, index) {
-                            if (index >= customerState.customers.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            }
-
-                            final customer = customerState.customers[index];
-
-                            return CustomerCard(
-                              customer: customer,
-                              onTap: () => _createOrder(customer),
+                    Expanded(
+                      child: BlocBuilder<CustomerBloc, CustomerState>(
+                        builder: (context, customerState) {
+                          if (customerState.status == CustomerStatus.loading &&
+                              customerState.customers.isEmpty) {
+                            return const LoadingPage(
+                              message: "Fetching Customers...",
                             );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                          }
 
-            if (orderState.status == CreateOrderStatus.loading)
-              Container(
-                color: Colors.black26,
-                child: const Center(child: CircularProgressIndicator()),
+                          if (customerState.customers.isEmpty) {
+                            return const Center(
+                              child: Text("No customers found"),
+                            );
+                          }
+
+                          return ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount:
+                                customerState.customers.length +
+                                (customerState.hasReachedMax ? 0 : 1),
+                            itemBuilder: (context, index) {
+                              if (index >= customerState.customers.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              final customer = customerState.customers[index];
+
+                              return CustomerCard(
+                                customer: customer,
+                                onTap: () => _createOrder(customer),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-          ],
-        );
-      },
+
+              if (orderState.status == CreateOrderStatus.loading)
+                Container(
+                  color: Colors.black26,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

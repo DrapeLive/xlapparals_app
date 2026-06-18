@@ -46,6 +46,7 @@ class DeliveryOptionsCard extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w600,
+                    fontSize: 12,
                   ),
                 ),
                 onTap: () => Navigator.pop(
@@ -63,6 +64,7 @@ class DeliveryOptionsCard extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
+                  fontSize: 12,
                 ),
               ),
               onTap: () => Navigator.pop(context, transport),
@@ -97,6 +99,7 @@ class DeliveryOptionsCard extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
+                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -126,6 +129,7 @@ class DeliveryOptionsCard extends StatelessWidget {
                                   state.expectedDate == null
                                       ? "mm/dd/yyyy"
                                       : "${state.expectedDate!.day}/${state.expectedDate!.month}/${state.expectedDate!.year}",
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               ),
                             ],
@@ -157,6 +161,7 @@ class DeliveryOptionsCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   state.selectedTransport?.name ?? "None",
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               ),
                               const Icon(Icons.keyboard_arrow_down),

@@ -37,7 +37,7 @@ class CustomerCard extends StatelessWidget {
                     customer.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontSize: 12,
                     ),
                   ),
 
@@ -47,13 +47,13 @@ class CustomerCard extends StatelessWidget {
                     customer.address,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 13),
+                    style: TextStyle(fontSize: 10),
                   ),
                 ],
               ),
             ),
 
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            const Icon(Icons.arrow_forward_ios, size: 14),
           ],
         ),
       ),

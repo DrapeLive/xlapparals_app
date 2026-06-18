@@ -61,13 +61,16 @@ class OrderItemCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
-                          fontSize: 20,
+                          fontSize: 14,
                         ),
                       ),
 
                       Text(
                         "${item.quantity} Set × ${item.pieceCount} pcs",
-                        style: TextStyle(color: AppColors.textPrimary),
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -78,7 +81,7 @@ class OrderItemCard extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
-                    fontSize: 18,
+                    fontSize: 14,
                   ),
                 ),
               ],

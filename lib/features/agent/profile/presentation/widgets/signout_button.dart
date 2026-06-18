@@ -10,20 +10,61 @@ class SignOutButton extends StatelessWidget {
 
   final SecureStorageService storage = SecureStorageService();
 
+  Future<void> _showSignOutDialog(BuildContext context) async {
+    final bool? shouldSignOut = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text("Sign Out"),
+          content: const Text(
+            "Are you sure you want to sign out of your account?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                Navigator.pop(dialogContext, true);
+              },
+              child: const Text(
+                "Sign Out",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldSignOut == true) {
+      await storage.clear();
+
+      if (context.mounted) {
+        context.go(RouteNames.login);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () async {
-        await storage.clear();
-        context.go(RouteNames.login);
-      },
+      onPressed: () => _showSignOutDialog(context),
       icon: const Icon(Icons.logout, color: Colors.red, size: 20),
       label: const Text(
         "Sign Out",
         style: TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w600,
-          fontSize: 20,
+          fontSize: 14,
         ),
       ),
       style: ElevatedButton.styleFrom(

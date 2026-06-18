@@ -39,7 +39,7 @@ Widget navBar({
                     : isSelect
                     ? AppColors.primary
                     : AppColors.textPrimary,
-                fontSize: 12,
+                fontSize: 9,
                 fontWeight: isSelect ? FontWeight.w700 : FontWeight.normal,
               ),
             ),

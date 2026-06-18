@@ -1,11 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 import 'package:flutter/services.dart';
 import '../../domain/repositories/order_form_repository.dart';
@@ -179,6 +176,7 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
                 fit: pw.BoxFit.contain,
               ),
               pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
                   pw.Text(
                     invoice.brand.name,
@@ -192,7 +190,8 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
                     pw.Text(invoice.brand.addressLine2!),
                   pw.Text(invoice.brand.phone),
                   pw.Text(invoice.brand.email),
-                  pw.Text("GST : ${invoice.brand.gst}"),
+                  if (invoice.brand.gst.isNotEmpty)
+                    pw.Text("GST : ${invoice.brand.gst}"),
                 ],
               ),
             ],

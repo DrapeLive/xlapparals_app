@@ -43,97 +43,173 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            context.go(RouteNames.agentOrderCustomers);
-          },
-        ),
-      ),
-      body: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
-        builder: (context, state) {
-          if (state.status == OrderDetailsStatus.loading) {
-            return const LoadingPage(message: "Fetching Order..");
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        final shouldLeave = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.secondary,
+            title: const Text('Cancel Order?', style: TextStyle(fontSize: 14)),
+            content: const Text(
+              'If you go back, your current order progress may be lost.',
+              style: TextStyle(fontSize: 12),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Stay', style: TextStyle(fontSize: 12)),
+              ),
+              TextButton(
+                onPressed: () => context.go(RouteNames.agentOrderCustomers),
+                child: const Text('Leave', style: TextStyle(fontSize: 12)),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldLeave == true) {
+          if (context.canPop()) {
+            context.pop();
           }
-
-          if (state.order == null) {
-            return const SizedBox();
-          }
-
-          final order = state.order!;
-          return RefreshIndicator(
-            onRefresh: _refresh,
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                CustomerInfoCard(customer: order.customerDetails),
-
-                const SizedBox(height: 10),
-
-                DeliveryOptionsCard(),
-
-                const SizedBox(height: 10),
-
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        "Order Items",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+        }
+      },
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () async {
+                final shouldLeave = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: AppColors.secondary,
+                    title: const Text(
+                      'Cancel Order?',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    content: const Text(
+                      'If you go back, your current order progress may be lost.',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text(
+                          'Stay',
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
-                    ),
+                      TextButton(
+                        onPressed: () =>
+                            context.go(RouteNames.agentOrderCustomers),
+                        child: const Text(
+                          'Leave',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
 
-                    BlocBuilder<AgentBloc, AgentState>(
-                      builder: (context, agentState) {
-                        final agentId = agentState.agent?.userId;
+                if (shouldLeave == true) {
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                }
+              },
+            ),
+          ),
+          body: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
+            builder: (context, state) {
+              if (state.status == OrderDetailsStatus.loading) {
+                return const LoadingPage(message: "Fetching Order..");
+              }
 
-                        return ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.orange,
-                            foregroundColor: AppColors.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadius,
-                              ),
+              if (state.order == null) {
+                return const SizedBox();
+              }
+
+              final order = state.order!;
+              return RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    CustomerInfoCard(customer: order.customerDetails),
+
+                    const SizedBox(height: 10),
+
+                    DeliveryOptionsCard(),
+
+                    const SizedBox(height: 10),
+
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "Order Items",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
                             ),
                           ),
-                          onPressed: agentId == null
-                              ? null
-                              : () {
-                                  context.go(
-                                    RouteNames.scanner,
-                                    extra: {
-                                      'orderId': state.order?.id,
-                                      'agentId': agentId,
+                        ),
+
+                        BlocBuilder<AgentBloc, AgentState>(
+                          builder: (context, agentState) {
+                            final agentId = agentState.agent?.userId;
+
+                            return ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.orange,
+                                foregroundColor: AppColors.secondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppConstants.borderRadius,
+                                  ),
+                                ),
+                              ),
+                              onPressed: agentId == null
+                                  ? null
+                                  : () {
+                                      context.go(
+                                        RouteNames.scanner,
+                                        extra: {
+                                          'orderId': state.order?.id,
+                                          'agentId': agentId,
+                                        },
+                                      );
                                     },
-                                  );
-                                },
-                          icon: const Icon(Icons.add),
-                          label: const Text("Add Item"),
-                        );
-                      },
+                              icon: const Icon(Icons.add),
+                              label: const Text(
+                                "Add Item",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
+
+                    const SizedBox(height: 5),
+
+                    OrderItemsSection(items: order.items, orderId: order.id),
+
+                    const SizedBox(height: 16),
+
+                    if (order.items.isNotEmpty)
+                      OrderSummaryCard(order: order, orderId: widget.orderId),
                   ],
                 ),
-
-                const SizedBox(height: 5),
-
-                OrderItemsSection(items: order.items, orderId: order.id),
-
-                const SizedBox(height: 16),
-
-                if (order.items.isNotEmpty)
-                  OrderSummaryCard(order: order, orderId: widget.orderId),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

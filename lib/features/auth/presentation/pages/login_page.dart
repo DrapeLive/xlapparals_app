@@ -124,14 +124,19 @@ class _LoginPageState extends State<LoginPage> {
 
                         Text(
                           "XL Apparels",
-                          style: theme.textTheme.displayLarge,
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: AppConstants.fontFamily,
+                          ),
                         ),
 
                         const SizedBox(height: 4),
 
                         Text(
                           "ORDER MANAGEMENT",
-                          style: theme.textTheme.bodyMedium,
+                          style: TextStyle(fontSize: 12),
                         ),
 
                         const SizedBox(height: 30),
@@ -140,7 +145,11 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Email address",
-                            style: theme.textTheme.bodyLarge,
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 12,
+                              fontFamily: AppConstants.fontFamily,
+                            ),
                           ),
                         ),
 
@@ -158,7 +167,11 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Password",
-                            style: theme.textTheme.bodyLarge,
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 12,
+                              fontFamily: AppConstants.fontFamily,
+                            ),
                           ),
                         ),
 
@@ -189,7 +202,10 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () {},
                             child: const Text(
                               "Forgot password?",
-                              style: TextStyle(color: AppColors.orange),
+                              style: TextStyle(
+                                color: AppColors.orange,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                         ),

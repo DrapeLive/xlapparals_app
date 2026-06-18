@@ -34,8 +34,8 @@ class QuantitySelector extends StatelessWidget {
                 "Qunatity",
                 style: TextStyle(
                   color: AppColors.primary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               IconButton(
@@ -59,7 +59,7 @@ class QuantitySelector extends StatelessWidget {
                     state.quantity.toString(),
                     style: TextStyle(
                       color: AppColors.primary,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

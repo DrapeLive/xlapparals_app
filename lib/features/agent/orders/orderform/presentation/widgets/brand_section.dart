@@ -20,11 +20,12 @@ class BrandSection extends StatelessWidget {
         const SizedBox(height: 12),
 
         Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               brand.name,
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),
@@ -35,14 +36,14 @@ class BrandSection extends StatelessWidget {
             Text(
               brand.addressLine1,
               textAlign: TextAlign.right,
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: AppColors.primary, fontSize: 12),
             ),
 
             if (brand.addressLine2 != null && brand.addressLine2!.isNotEmpty)
               Text(
                 brand.addressLine2!,
                 textAlign: TextAlign.right,
-                style: TextStyle(color: AppColors.primary),
+                style: TextStyle(color: AppColors.primary, fontSize: 12),
               ),
 
             const SizedBox(height: 4),
@@ -50,24 +51,26 @@ class BrandSection extends StatelessWidget {
             Text(
               brand.phone,
               textAlign: TextAlign.right,
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: AppColors.primary, fontSize: 12),
             ),
 
             Text(
               brand.email,
               textAlign: TextAlign.right,
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: AppColors.primary, fontSize: 12),
             ),
 
             const SizedBox(height: 4),
 
-            Text(
-              "GST : ${brand.gst}",
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+            if (brand.gst.isNotEmpty)
+              Text(
+                "GST : ${brand.gst}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                  fontSize: 12,
+                ),
               ),
-            ),
           ],
         ),
       ],

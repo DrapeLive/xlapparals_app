@@ -62,7 +62,7 @@ class OrderCard extends StatelessWidget {
                         customerName.toUpperCase(),
                         style: TextStyle(
                           color: AppColors.primary,
-                          fontSize: 14,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -71,7 +71,7 @@ class OrderCard extends StatelessWidget {
                         agentName,
                         style: TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 14,
+                          fontSize: 9,
                         ),
                       ),
 
@@ -81,7 +81,7 @@ class OrderCard extends StatelessWidget {
                         date,
                         style: TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 14,
+                          fontSize: 11,
                         ),
                       ),
                     ],
@@ -110,13 +110,13 @@ class OrderCard extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 11,
                               ),
                             ),
                             const TextSpan(
                               text: " Sets",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 9,
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -147,13 +147,13 @@ class OrderCard extends StatelessWidget {
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 11,
                               ),
                             ),
                             const TextSpan(
                               text: " pcs",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 9,
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -169,7 +169,7 @@ class OrderCard extends StatelessWidget {
                   "₹${indianCurrency.format(amount)}",
                   style: TextStyle(
                     color: AppColors.primary,
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.end,

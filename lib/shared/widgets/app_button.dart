@@ -37,7 +37,7 @@ class AppButton extends StatelessWidget {
 
         label: Text(
           isLoading ? "Signing In..." : text,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
 
         style: ElevatedButton.styleFrom(

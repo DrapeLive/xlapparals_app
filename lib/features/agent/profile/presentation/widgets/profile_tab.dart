@@ -48,6 +48,7 @@ class ProfileTab extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
+              fontSize: 12,
               color: isSelected ? Colors.white : AppColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),

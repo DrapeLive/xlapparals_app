@@ -19,7 +19,7 @@ class StockBadge extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 7,
           fontWeight: FontWeight.bold,
           color: color,
         ),

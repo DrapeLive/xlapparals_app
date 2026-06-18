@@ -44,112 +44,130 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            context.go(
-              RouteNames.scanner,
-              extra: {"agentId": widget.agentId, "orderId": widget.orderId},
-            );
-          },
-        ),
-      ),
-      body: BlocConsumer<ItemDetailsBloc, ItemDetailsState>(
-        listener: (context, state) {
-          if (state.addedSuccessfully) {
-            context.go(RouteNames.orderDetails, extra: widget.orderId);
-          }
-        },
-        builder: (context, state) {
-          if (state.isLoading) {
-            return LoadingPage(message: "Fetch Items...");
-          }
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          context.go(
+            RouteNames.scanner,
+            extra: {"agentId": widget.agentId, "orderId": widget.orderId},
+          );
+        }
+      },
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                context.go(
+                  RouteNames.scanner,
+                  extra: {"agentId": widget.agentId, "orderId": widget.orderId},
+                );
+              },
+            ),
+          ),
+          body: BlocConsumer<ItemDetailsBloc, ItemDetailsState>(
+            listener: (context, state) {
+              if (state.addedSuccessfully) {
+                context.go(RouteNames.orderDetails, extra: widget.orderId);
+              }
+            },
+            builder: (context, state) {
+              if (state.isLoading) {
+                return LoadingPage(message: "Fetch Items...");
+              }
 
-          if (state.item == null) {
-            return const SizedBox();
-          }
+              if (state.item == null) {
+                return const SizedBox();
+              }
 
-          final item = state.item!;
-          final variant = item.variants[state.selectedVariantIndex];
+              final item = state.item!;
+              final variant = item.variants[state.selectedVariantIndex];
 
-          return SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ItemImageSection(imageUrl: variant.image),
-
-                  const SizedBox(height: 16),
-
-                  Text(
-                    item.name,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-
-                  Text("PREMIUM COLLECTION"),
-
-                  const SizedBox(height: 16),
-
-                  VariantThumbnailList(variants: item.variants),
-
-                  const SizedBox(height: 16),
-
-                  Text(
-                    "DESCRIPTION",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                  Text(item.description),
-                  const SizedBox(height: 10),
-                  Row(
+              return SafeArea(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      ItemImageSection(imageUrl: variant.image),
+
+                      const SizedBox(height: 16),
+
                       Text(
-                        "Size Group",
+                        item.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+
+                      Text(
+                        "PREMIUM COLLECTION",
+                        style: TextStyle(fontSize: 12),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      VariantThumbnailList(variants: item.variants),
+
+                      const SizedBox(height: 16),
+
+                      Text(
+                        "DESCRIPTION",
                         style: TextStyle(
                           color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
                         ),
+                      ),
+
+                      Text(item.description, style: TextStyle(fontSize: 11)),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            "Size Group",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizeDropdown(
+                        sizes: SizeRangeUtils.getAvailableSizes(
+                          variantSizes: variant.sizes,
+                          itemType: item.type,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      const QuantitySelector(),
+
+                      const SizedBox(height: 24),
+
+                      AddToOrderButton(
+                        loading: state.isAdding,
+                        onTap: () {
+                          context.read<ItemDetailsBloc>().add(
+                            AddItemToOrder(widget.orderId),
+                          );
+                        },
                       ),
                     ],
                   ),
-
-                  SizeDropdown(
-                    sizes: SizeRangeUtils.getAvailableSizes(
-                      variantSizes: variant.sizes,
-                      itemType: item.type,
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  const QuantitySelector(),
-
-                  const SizedBox(height: 24),
-
-                  AddToOrderButton(
-                    loading: state.isAdding,
-                    onTap: () {
-                      context.read<ItemDetailsBloc>().add(
-                        AddItemToOrder(widget.orderId),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

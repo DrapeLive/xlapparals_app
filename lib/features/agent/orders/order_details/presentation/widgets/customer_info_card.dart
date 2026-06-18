@@ -49,7 +49,7 @@ class CustomerInfoCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -78,14 +78,17 @@ class CustomerInfoCard extends StatelessWidget {
                       ),
                       Text(
                         "Location",
-                        style: TextStyle(color: AppColors.textPrimary),
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                   Text(
                     customer.address,
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 10,
                       color: AppColors.textPrimary,
                     ),
                   ),

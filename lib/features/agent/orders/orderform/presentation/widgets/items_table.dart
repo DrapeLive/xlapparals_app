@@ -28,25 +28,31 @@ class ItemsTable extends StatelessWidget {
             Center(
               child: Text(
                 "Item",
-                style: TextStyle(color: AppColors.secondary, fontSize: 14),
+                style: TextStyle(color: AppColors.secondary, fontSize: 11),
               ),
             ),
             Center(
-              child: Text("Size", style: TextStyle(color: AppColors.secondary)),
+              child: Text(
+                "Size",
+                style: TextStyle(color: AppColors.secondary, fontSize: 11),
+              ),
             ),
             Center(
               child: Text(
                 "Price",
-                style: TextStyle(color: AppColors.secondary),
+                style: TextStyle(color: AppColors.secondary, fontSize: 11),
               ),
             ),
             Center(
-              child: Text("Qty", style: TextStyle(color: AppColors.secondary)),
+              child: Text(
+                "Qty",
+                style: TextStyle(color: AppColors.secondary, fontSize: 11),
+              ),
             ),
             Center(
               child: Text(
                 "Amount",
-                style: TextStyle(color: AppColors.secondary),
+                style: TextStyle(color: AppColors.secondary, fontSize: 11),
               ),
             ),
           ],
@@ -57,24 +63,24 @@ class ItemsTable extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(6),
-                child: Text(item.itemName, style: TextStyle(fontSize: 12)),
+                child: Text(item.itemName, style: TextStyle(fontSize: 10)),
               ),
               Padding(
                 padding: const EdgeInsets.all(6),
-                child: Text(item.sizeGroup, style: TextStyle(fontSize: 12)),
+                child: Text(item.sizeGroup, style: TextStyle(fontSize: 10)),
               ),
               Padding(
                 padding: const EdgeInsets.all(6),
                 child: Text(
                   "₹${item.itemPrice}",
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 10),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(6),
                 child: Text(
                   "${item.quantity} x ${item.pieceCount}",
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 10),
                 ),
               ),
               Padding(
@@ -85,7 +91,7 @@ class ItemsTable extends StatelessWidget {
                         item.quantity *
                         item.pieceCount,
                   ),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 10),
                 ),
               ),
             ],

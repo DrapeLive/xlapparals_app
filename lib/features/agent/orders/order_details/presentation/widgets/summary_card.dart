@@ -26,7 +26,7 @@ class OrderSummaryCard extends StatelessWidget {
           const Text(
             "Order Summary",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: AppColors.primary,
             ),
@@ -41,18 +41,28 @@ class OrderSummaryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("CUSTOMER"),
+                    Text("CUSTOMER", style: TextStyle(fontSize: 12)),
                     SizedBox(height: 5),
                     Text(
                       order.customerDetails.name,
                       style: TextStyle(
+                        fontSize: 10,
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(order.customerDetails.address),
-                    Text(order.customerDetails.contact),
-                    Text(order.customerDetails.gst),
+                    Text(
+                      order.customerDetails.address,
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    Text(
+                      order.customerDetails.contact,
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    Text(
+                      order.customerDetails.gst,
+                      style: TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
               ),
@@ -60,13 +70,20 @@ class OrderSummaryCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text("AGENT"),
+                    Text("AGENT", style: TextStyle(fontSize: 12)),
                     SizedBox(height: 5),
                     Text(
                       order.agentDetails.username,
-                      style: TextStyle(color: AppColors.primary),
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    Text(order.agentDetails.contact),
+                    Text(
+                      order.agentDetails.contact,
+                      style: TextStyle(fontSize: 10, color: AppColors.primary),
+                    ),
                   ],
                 ),
               ),
@@ -81,10 +98,10 @@ class OrderSummaryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("DATE"),
+                    Text("DATE", style: TextStyle(fontSize: 12)),
                     Text(
                       DateFormat('dd MMM yyyy').format(order.createdAt),
-                      style: TextStyle(color: AppColors.primary),
+                      style: TextStyle(color: AppColors.primary, fontSize: 10),
                     ),
                   ],
                 ),
@@ -93,7 +110,7 @@ class OrderSummaryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("CURRENT STATUS"),
+                    Text("CURRENT STATUS", style: TextStyle(fontSize: 12)),
                     StatusBadge(status: order.status.toUpperCase()),
                   ],
                 ),
@@ -143,6 +160,7 @@ class OrderSummaryCard extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             color: AppColors.primary,
+            fontSize: 10,
           ),
         ),
       ],

@@ -25,11 +25,17 @@ class ProfileCard extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 9,
                   color: AppColors.textPrimary,
                 ),
               ),
-              Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ],

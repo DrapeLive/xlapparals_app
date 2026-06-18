@@ -40,6 +40,7 @@ class OrderSummaryCard extends StatelessWidget {
                       const Text(
                         "ORDER SUMMARY",
                         style: TextStyle(
+                          fontSize: 12,
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.w700,
                         ),
@@ -47,7 +48,10 @@ class OrderSummaryCard extends StatelessWidget {
 
                       Text(
                         "${order.totalSets} Set | ${order.totalPieces} Pcs",
-                        style: TextStyle(color: AppColors.primary),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 10,
+                        ),
                       ),
 
                       const SizedBox(height: 6),
@@ -57,7 +61,7 @@ class OrderSummaryCard extends StatelessWidget {
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                          fontSize: 18,
                         ),
                       ),
                     ],

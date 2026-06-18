@@ -25,7 +25,7 @@ class OrdersPage extends StatelessWidget {
               children: [
                 const Text(
                   "Remaining orders",
-                  style: TextStyle(color: AppColors.primary, fontSize: 12),
+                  style: TextStyle(color: AppColors.primary, fontSize: 8),
                 ),
                 const SizedBox(width: 5),
                 Container(
@@ -38,7 +38,7 @@ class OrdersPage extends StatelessWidget {
                     "${orders.length}",
                     style: const TextStyle(
                       color: AppColors.primary,
-                      fontSize: 10,
+                      fontSize: 8,
                     ),
                   ),
                 ),

@@ -19,10 +19,10 @@ class EmptyOrderWidget extends StatelessWidget {
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.inventory_2_outlined, size: 60, color: AppColors.border),
+            Icon(Icons.inventory_2_outlined, size: 50, color: AppColors.border),
             SizedBox(height: 12),
-            Text("No items added yet"),
-            Text("Tap to scan or search items"),
+            Text("No items added yet", style: TextStyle(fontSize: 12)),
+            Text("Tap to scan or search items", style: TextStyle(fontSize: 12)),
           ],
         ),
       ),

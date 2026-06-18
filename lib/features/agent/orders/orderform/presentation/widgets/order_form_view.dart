@@ -65,7 +65,7 @@ class OrderInvoiceView extends StatelessWidget {
                             "ORDER FORM",
                             style: TextStyle(
                               color: AppColors.primary,
-                              fontSize: 24,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -74,17 +74,26 @@ class OrderInvoiceView extends StatelessWidget {
                             children: [
                               Text(
                                 "Order Form #${invoice.id}",
-                                style: TextStyle(color: AppColors.primary),
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                ),
                               ),
 
                               Text(
                                 "Date : ${DateFormat('dd/MM/yyyy').format(invoice.createdAt)}",
-                                style: TextStyle(color: AppColors.primary),
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                ),
                               ),
 
                               Text(
                                 "Time : ${DateFormat('hh:mm:ss a').format(invoice.createdAt)}",
-                                style: TextStyle(color: AppColors.primary),
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                ),
                               ),
                             ],
                           ),
@@ -119,7 +128,10 @@ class OrderInvoiceView extends StatelessWidget {
                                 );
                               },
                               icon: const Icon(Icons.download),
-                              label: const Text("Download"),
+                              label: const Text(
+                                "Download",
+                                style: TextStyle(fontSize: 12),
+                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: AppColors.secondary,
@@ -137,7 +149,10 @@ class OrderInvoiceView extends StatelessWidget {
                                 );
                               },
                               icon: const Icon(Icons.share),
-                              label: const Text("Share"),
+                              label: const Text(
+                                "Share",
+                                style: TextStyle(fontSize: 12),
+                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: AppColors.secondary,
