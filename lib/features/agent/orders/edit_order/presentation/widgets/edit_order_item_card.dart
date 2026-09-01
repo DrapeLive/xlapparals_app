@@ -43,7 +43,6 @@ class EditOrderItemCard extends StatelessWidget {
                         context.read<EditOrderBloc>().add(
                           DeleteItemEvent(orderId, item.id),
                         );
-                        context.go(RouteNames.editOrder, extra: orderId);
                       },
                       style: IconButton.styleFrom(
                         foregroundColor: AppColors.red,
@@ -52,7 +51,7 @@ class EditOrderItemCard extends StatelessWidget {
                   ],
                 ),
                 ZoomableImage(
-                  imageUrl: item.variantImage,
+                  imageUrl: item.variantImage!,
                   height: 60,
                   width: 60,
                 ),
@@ -68,13 +67,16 @@ class EditOrderItemCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
-                          fontSize: 20,
+                          fontSize: 14,
                         ),
                       ),
 
                       Text(
                         "${item.quantity} Set × ${item.pieceCount} pcs",
-                        style: TextStyle(color: AppColors.textPrimary),
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -83,9 +85,9 @@ class EditOrderItemCard extends StatelessWidget {
                 Text(
                   "₹${item.itemPrice}",
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.primary,
-                    fontSize: 18,
+                    fontSize: 15,
                   ),
                 ),
               ],

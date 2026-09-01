@@ -11,11 +11,21 @@ class CustomerDetailsModel extends CustomerDetails {
 
   factory CustomerDetailsModel.fromJson(Map<String, dynamic> json) {
     return CustomerDetailsModel(
-      id: json["id"],
-      name: json["name"] ?? "",
-      contact: json["contact"] ?? "",
-      address: json["address"] ?? "",
-      gst: json["gst"] ?? "",
+      id: json["id"] ?? 0,
+      name: json["name"]?.toString() ?? "",
+      contact: json["contact"]?.toString() ?? "",
+      address: json["address"]?.toString() ?? "",
+      gst: json["gst"]?.toString() ?? "",
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "contact": contact,
+      "address": address,
+      "gst": gst,
+    };
   }
 }

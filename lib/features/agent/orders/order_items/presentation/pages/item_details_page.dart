@@ -69,9 +69,77 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
             ),
           ),
           body: BlocConsumer<ItemDetailsBloc, ItemDetailsState>(
-            listener: (context, state) {
+            listener: (context, state) async {
+              if (state.isUnassignedItem) {
+                await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => AlertDialog(
+                    backgroundColor: AppColors.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    icon: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.link_off_rounded,
+                        color: Colors.orange.shade600,
+                        size: 32,
+                      ),
+                    ),
+                    title: const Text(
+                      'Unassigned Item',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    content: const Text(
+                      'This item is not assigned to you. Please contact admin for assignment.',
+                      textAlign: TextAlign.center,
+                    ),
+                    actionsAlignment: MainAxisAlignment.center,
+                    actions: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close dialog
+                            context.go(
+                              RouteNames.scanner,
+                              extra: {
+                                "agentId": widget.agentId,
+                                "orderId": widget.orderId,
+                              },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Scan Another Item',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
+
               if (state.addedSuccessfully) {
                 context.go(RouteNames.orderDetails, extra: widget.orderId);
+              }
+              if (state.error != null) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.error!)));
               }
             },
             builder: (context, state) {

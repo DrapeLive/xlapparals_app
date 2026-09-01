@@ -45,7 +45,7 @@ class OrderItemCard extends StatelessWidget {
                   ],
                 ),
                 ZoomableImage(
-                  imageUrl: item.variantImage,
+                  imageUrl: item.variantImage!,
                   height: 60,
                   width: 60,
                 ),

@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/pages/home_page.dart';
+import 'package:xlapparals_app/features/agent/orders/customers/presentation/pages/add_customer_page.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/pages/customer_order_page.dart';
 import 'package:xlapparals_app/features/agent/orders/edit_order/presentation/pages/edit_order_page.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/pages/order_detail_page.dart';
@@ -35,7 +36,6 @@ class AppRouter {
 
       return null;
     },
-
     routes: [
       GoRoute(path: RouteNames.login, builder: (_, _) => const LoginPage()),
       GoRoute(path: RouteNames.agentHome, builder: (_, _) => HomePage()),
@@ -100,6 +100,10 @@ class AppRouter {
 
           return EditOrderPage(orderId: orderId);
         },
+      ),
+      GoRoute(
+        path: RouteNames.addCustomer,
+        builder: (context, state) => const AddCustomerPage(),
       ),
     ],
   );

@@ -9,3 +9,11 @@ class SearchCustomers extends CustomerEvent {
 
   SearchCustomers(this.query);
 }
+
+class FetchTransports extends CustomerEvent {}
+
+class CreateCustomer extends CustomerEvent {
+  final Map<String, dynamic> data;
+
+  CreateCustomer(this.data);
+}

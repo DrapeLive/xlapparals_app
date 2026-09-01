@@ -8,6 +8,7 @@ import 'package:xlapparals_app/features/agent/orders/order_details/domain/entiti
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_event.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_state.dart';
+import 'package:intl/intl.dart';
 
 class OrderSummaryCard extends StatelessWidget {
   final OrderDetails order;
@@ -57,7 +58,7 @@ class OrderSummaryCard extends StatelessWidget {
                       const SizedBox(height: 6),
 
                       Text(
-                        "₹${order.grandTotal.toStringAsFixed(0)}",
+                        "₹${NumberFormat('#,##,##0', 'en_IN').format(order.grandTotal)}",
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,

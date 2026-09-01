@@ -22,32 +22,45 @@ class OrderDetailsModel extends OrderDetails {
 
   factory OrderDetailsModel.fromJson(Map<String, dynamic> json) {
     return OrderDetailsModel(
-      id: json["id"],
+      id: json["id"] ?? 0,
 
-      items: (json["items"] as List)
-          .map((e) => OrderItemModel.fromJson(e))
+      items: (json["items"] as List? ?? [])
+          .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
 
-      agentDetails: AgentDetailsModel.fromJson(json["agent_details"]),
+      agentDetails: AgentDetailsModel.fromJson(
+        json["agent_details"] as Map<String, dynamic>? ?? {},
+      ),
 
-      customerDetails: CustomerDetailsModel.fromJson(json["customer_details"]),
+      customerDetails: CustomerDetailsModel.fromJson(
+        json["customer_details"] as Map<String, dynamic>? ?? {},
+      ),
 
       totalSets: json["total_sets"] ?? 0,
 
       totalPieces: json["total_pieces"] ?? 0,
 
-      status: json["status"] ?? "",
+      status: json["status"]?.toString() ?? "",
 
-      lrNumber: json["lr_number"],
+      lrNumber: json["lr_number"]?.toString() ?? "",
 
       expectedDeliveryDate: json["expected_delivery_date"] == null
           ? null
-          : DateTime.parse(json["expected_delivery_date"] as String),
+          : DateTime.tryParse(json["expected_delivery_date"].toString()),
 
-      preferredTransport: json["preferred_transport"],
+      // API returns:
+      // "preferred_transport": null
+      preferredTransport: json["preferred_transport"] is int
+          ? json["preferred_transport"]
+          : int.tryParse(json["preferred_transport"]?.toString() ?? ""),
 
-      transportCompany: json["transport_company"],
-      createdAt: DateTime.parse(json['created_at']),
+      // API returns:
+      // "transport_company": null
+      transportCompany: json["transport_company"]?.toString(),
+
+      createdAt:
+          DateTime.tryParse(json["created_at"]?.toString() ?? "") ??
+          DateTime.fromMillisecondsSinceEpoch(0),
     );
   }
 }

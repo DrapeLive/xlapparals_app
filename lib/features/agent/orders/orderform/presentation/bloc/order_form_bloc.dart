@@ -169,12 +169,15 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
-              pw.Image(
-                logoImage!,
-                width: 100,
-                height: 100,
-                fit: pw.BoxFit.contain,
-              ),
+              if (logoImage != null)
+                pw.Image(
+                  logoImage,
+                  width: 100,
+                  height: 100,
+                  fit: pw.BoxFit.contain,
+                )
+              else
+                pw.SizedBox(width: 100, height: 100),
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [

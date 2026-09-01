@@ -23,26 +23,36 @@ class OrderItemModel extends OrderDetailsItem {
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
       id: json["id"] ?? 0,
+
       item: json["item"] ?? 0,
+
       variant: json["variant"] ?? 0,
 
-      itemName: json["item_name"] ?? "",
-      itemNameDisplay: json["item_name_display"] ?? "",
+      itemName: json["item_name"]?.toString() ?? "",
 
-      itemPrice: json["item_price"]?.toString() ?? "0",
-      itemPriceDisplay: json["item_price_display"]?.toString() ?? "0",
+      itemNameDisplay: json["item_name_display"]?.toString() ?? "",
 
-      variantImage: json["variant_image"] ?? "",
-      variantImageDisplay: json["variant_image_display"],
+      itemPrice: json["item_price"]?.toString() ?? "0.00",
 
-      sizeGroup: json["size_group"] ?? "",
-      itemType: json["item_type"] ?? "",
+      itemPriceDisplay: json["item_price_display"]?.toString() ?? "0.00",
 
-      size: json["size"] ?? "",
-      sizeDisplay: json["size_display"] ?? "",
+      // Nullable because API can return null.
+      variantImage: json["variant_image"]?.toString(),
+
+      variantImageDisplay: json["variant_image_display"]?.toString(),
+
+      sizeGroup: json["size_group"]?.toString() ?? "",
+
+      itemType: json["item_type"]?.toString() ?? "",
+
+      size: json["size"]?.toString() ?? "",
+
+      sizeDisplay: json["size_display"]?.toString() ?? "",
 
       quantity: json["quantity"] ?? 0,
+
       packedQuantity: json["packed_quantity"] ?? 0,
+
       pieceCount: json["piece_count"] ?? 0,
     );
   }

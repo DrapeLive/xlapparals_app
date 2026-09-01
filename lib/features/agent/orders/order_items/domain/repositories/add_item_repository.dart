@@ -8,6 +8,7 @@ abstract class AddItemRepository {
 
   Future<void> addItemToOrder({
     required int orderId,
+    required int variantId,
     required String qrCode,
     required int quantity,
     required String sizeGroup,

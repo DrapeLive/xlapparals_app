@@ -60,6 +60,18 @@ class SizeDropdown extends StatelessWidget {
             fillColor: AppColors.secondary,
           ),
           iconEnabledColor: AppColors.primary,
+          isExpanded: true,
+          selectedItemBuilder: (context) {
+            return sizes.map((size) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(size.sizeRange, style: TextStyle(fontSize: 12, color: AppColors.primary)),
+                  Text('${size.stock} in stock', style: TextStyle(fontSize: 12, color: AppColors.textPrimary)),
+                ],
+              );
+            }).toList();
+          },
           items: sizes.map((size) {
             return DropdownMenuItem<String>(
               value: size.sizeRange,

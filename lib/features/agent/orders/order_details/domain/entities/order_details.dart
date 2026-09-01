@@ -21,8 +21,11 @@ class OrderDetails {
 
   final String lrNumber;
 
+  /// Transport ID.
+  /// Can be null because API can return null.
   final int? preferredTransport;
 
+  /// Transport company can be null.
   final String? transportCompany;
 
   final DateTime createdAt;
@@ -42,13 +45,42 @@ class OrderDetails {
     required this.transportCompany,
   });
 
+  // ---------------------------------------------------------------------------
+  // Status helpers
+  // ---------------------------------------------------------------------------
+
   bool get isDraft => status.toUpperCase() == "DRAFT";
 
   bool get isPending => status.toUpperCase() == "PENDING";
 
+  bool get isDispatched => status.toUpperCase() == "DISPATCHED";
+
+  bool get isDelivered => status.toUpperCase() == "DELIVERED";
+
+  bool get isCancelled => status.toUpperCase() == "CANCELLED";
+
+  // ---------------------------------------------------------------------------
+  // Other helpers
+  // ---------------------------------------------------------------------------
+
   bool get hasItems => items.isNotEmpty;
 
+  bool get hasExpectedDeliveryDate => expectedDeliveryDate != null;
+
+  bool get hasLrNumber => lrNumber.trim().isNotEmpty;
+
+  bool get hasTransport =>
+      preferredTransport != null ||
+      (transportCompany?.trim().isNotEmpty ?? false);
+
+  // ---------------------------------------------------------------------------
+  // Calculations
+  // ---------------------------------------------------------------------------
+
   double get grandTotal {
-    return items.fold(0, (sum, item) => sum + item.totalPrice);
+    return items.fold(
+      0.0,
+      (sum, item) => sum + (item.unitPrice * item.quantity * item.pieceCount),
+    );
   }
 }

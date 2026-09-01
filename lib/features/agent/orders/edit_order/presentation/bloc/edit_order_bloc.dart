@@ -77,6 +77,8 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
       emit(state.copyWith(loading: true));
       await repository.deleteItem(itemId: event.itemId, orderId: event.orderId);
 
+      add(FetchEditOrderDetails(event.orderId));
+
       emit(state.copyWith(loading: false));
     } catch (_) {}
   }

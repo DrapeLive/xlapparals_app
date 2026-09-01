@@ -46,8 +46,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listenWhen: (previous, current) {
@@ -114,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                               AppConstants.borderRadius,
                             ),
                             child: Image.asset(
-                              'assets/icon/icon.png',
+                              'assets/icon/icon.jpg',
                               fit: BoxFit.cover,
                             ),
                           ),

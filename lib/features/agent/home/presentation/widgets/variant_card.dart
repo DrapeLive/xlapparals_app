@@ -109,19 +109,19 @@ class VariantCard extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          if (!isOutofStock)
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(60, 25),
-                ),
-                child: const Text("Order", style: TextStyle(fontSize: 10)),
-              ),
-            ),
+          // if (!isOutofStock)
+          //   Align(
+          //     alignment: Alignment.centerRight,
+          //     child: ElevatedButton(
+          //       onPressed: () {},
+          //       style: ElevatedButton.styleFrom(
+          //         backgroundColor: Colors.black,
+          //         foregroundColor: Colors.white,
+          //         minimumSize: const Size(60, 25),
+          //       ),
+          //       child: const Text("Order", style: TextStyle(fontSize: 10)),
+          //     ),
+          //   ),
         ],
       ),
     );

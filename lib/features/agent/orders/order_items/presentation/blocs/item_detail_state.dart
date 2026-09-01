@@ -4,28 +4,28 @@ import 'package:xlapparals_app/features/agent/orders/order_items/domain/entities
 class ItemDetailsState {
   final bool isLoading;
   final bool isAdding;
-
   final ItemDetails? item;
 
   final int selectedVariantIndex;
 
   final List<ItemSize> availableSizes;
   final ItemSize? selectedSize;
-
   final int quantity;
 
   final bool addedSuccessfully;
+  final bool isUnassignedItem;
   final String? error;
 
   const ItemDetailsState({
-    this.isLoading = false,
-    this.isAdding = false,
     this.item,
     this.selectedVariantIndex = 0,
-    this.availableSizes = const [],
-    this.selectedSize,
     this.quantity = 1,
+    this.selectedSize,
+    this.availableSizes = const [],
+    this.isLoading = false,
+    this.isAdding = false,
     this.addedSuccessfully = false,
+    this.isUnassignedItem = false,
     this.error,
   });
 
@@ -38,6 +38,7 @@ class ItemDetailsState {
     ItemSize? selectedSize,
     int? quantity,
     bool? addedSuccessfully,
+    bool? isUnassignedItem,
     String? error,
   }) {
     return ItemDetailsState(
@@ -49,6 +50,7 @@ class ItemDetailsState {
       selectedSize: selectedSize ?? this.selectedSize,
       quantity: quantity ?? this.quantity,
       addedSuccessfully: addedSuccessfully ?? this.addedSuccessfully,
+      isUnassignedItem: isUnassignedItem ?? this.isUnassignedItem,
       error: error,
     );
   }

@@ -12,4 +12,5 @@ class RouteNames {
   static const po = '/agent/order/po';
   static const orderInform = '/agent/order-inform';
   static const editOrder = '/agent/edit-order';
+  static const addCustomer = '/agent/order/customers/add';
 }

@@ -1,6 +1,6 @@
 name: xlapparals_app
 description: "A new Flutter project."
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.12.0
@@ -22,13 +22,15 @@ dependencies:
   equatable: ^2.0.8
   shared_preferences: ^2.5.5
   cached_network_image: ^3.4.1
-  mobile_scanner: ^7.2.0
   path_provider: ^2.1.5
   open_filex: ^4.7.0
   printing: ^5.14.3
   pdf: ^3.12.0
   file_saver: ^0.4.0
   share_plus: ^13.1.0
+  camera: ^0.12.0+1
+  google_mlkit_barcode_scanning: ^0.14.2
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +41,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icon/
+    - assets/sounds/
     - assets/fonts/NotoSans-Regular.ttf
     - assets/fonts/NotoSans-Bold.ttf
   fonts:
@@ -56,19 +59,19 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/icon.png"
+  image_path: "assets/icon/icon.jpg"
   min_sdk_android: 21
 
 flutter_native_splash:
   android: true
   ios: true
   color: "#FFFFFF"
-  image: assets/icon/icon.png
-  image_dark: assets/icon/icon.png
-  image_android: assets/icon/icon.png
-  image_dark_android: assets/icon/icon.png
-  image_ios: assets/icon/icon.png
-  image_dark_ios: assets/icon/icon.png
+  image: assets/icon/icon.jpg
+  image_dark: assets/icon/icon.jpg
+  image_android: assets/icon/icon.jpg
+  image_dark_android: assets/icon/icon.jpg
+  image_ios: assets/icon/icon.jpg
+  image_dark_ios: assets/icon/icon.jpg
 
   android_gravity: center # bottom, center, center_horizontal, center_vertical,
 
@@ -79,10 +82,9 @@ flutter_native_splash:
   android_12:
     # background color
     color: "#FFFFFF"
-    background_color: "#FFFFFF"
 
-    image: assets/icon/icon.png
-    image_dark: assets/icon/icon.png
+    image: assets/icon/icon.jpg
+    image_dark: assets/icon/icon.jpg
 
     icon_background_color: "#FFFFFF"
     icon_background_color_dark: "#FFFFFF"

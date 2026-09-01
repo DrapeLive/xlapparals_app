@@ -25,6 +25,12 @@ class IncrementQuantity extends ItemDetailsEvent {}
 
 class DecrementQuantity extends ItemDetailsEvent {}
 
+class SetQuantity extends ItemDetailsEvent {
+  final int quantity;
+
+  SetQuantity(this.quantity);
+}
+
 class AddItemToOrder extends ItemDetailsEvent {
   final int orderId;
 

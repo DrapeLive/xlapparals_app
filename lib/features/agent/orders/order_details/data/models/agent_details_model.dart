@@ -9,9 +9,13 @@ class AgentDetailsModel extends AgentDetails {
 
   factory AgentDetailsModel.fromJson(Map<String, dynamic> json) {
     return AgentDetailsModel(
-      id: json["id"],
-      username: json["username"] ?? "",
-      contact: json["contact"] ?? "",
+      id: json["id"] ?? 0,
+      username: json["username"]?.toString() ?? "",
+      contact: json["contact"]?.toString() ?? "",
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {"id": id, "username": username, "contact": contact};
   }
 }

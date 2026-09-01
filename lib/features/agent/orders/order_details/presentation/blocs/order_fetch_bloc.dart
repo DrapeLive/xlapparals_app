@@ -90,9 +90,15 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
     DeleteOrderItem event,
     Emitter<OrderDetailsState> emit,
   ) async {
-    await repository.deleteItemOrder(
-      orderId: event.orderId,
-      itemId: event.itemId,
-    );
+    try {
+      emit(state.copyWith(status: OrderDetailsStatus.loading));
+      await repository.deleteItemOrder(
+        orderId: event.orderId,
+        itemId: event.itemId,
+      );
+      add(FetchOrderDetails(event.orderId));
+    } catch (_) {
+      add(FetchOrderDetails(event.orderId));
+    }
   }
 }

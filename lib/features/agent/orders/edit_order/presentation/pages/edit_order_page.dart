@@ -74,7 +74,7 @@ class _EditOrderPageState extends State<EditOrderPage> {
                       child: Text(
                         "Order Items",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
                         ),

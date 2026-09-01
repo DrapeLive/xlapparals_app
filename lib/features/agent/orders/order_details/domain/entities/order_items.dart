@@ -10,7 +10,9 @@ class OrderDetailsItem {
   final String itemPrice;
   final String itemPriceDisplay;
 
-  final String variantImage;
+  /// Can be empty when the API does not provide an image.
+  final String? variantImage;
+
   final String? variantImageDisplay;
 
   final String sizeGroup;
@@ -42,7 +44,27 @@ class OrderDetailsItem {
     required this.pieceCount,
   });
 
+  // ---------------------------------------------------------------------------
+  // Price
+  // ---------------------------------------------------------------------------
+
   double get unitPrice => double.tryParse(itemPrice) ?? 0.0;
 
   double get totalPrice => unitPrice * quantity;
+
+  // ---------------------------------------------------------------------------
+  // Quantity
+  // ---------------------------------------------------------------------------
+
+  bool get isPacked => packedQuantity >= (quantity * pieceCount);
+
+  int get totalPieces => quantity * pieceCount;
+
+  int get remainingPieces => totalPieces - packedQuantity;
+
+  // ---------------------------------------------------------------------------
+  // Image
+  // ---------------------------------------------------------------------------
+
+  bool get hasImage => variantImage != null && variantImage!.trim().isNotEmpty;
 }

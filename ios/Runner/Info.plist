@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>NSCameraUsageDescription</key>
-        <string>Camera access is required to scan QR codes.</string>
+		<string>Camera access is required to scan QR codes.</string>
 		<key>CFBundleDisplayName</key>
 		<string>Xlapparals App</string>
 		<key>CFBundleExecutable</key>
@@ -33,9 +33,9 @@
 			<key>UIApplicationSupportsMultipleScenes</key>
 			<false/>
 			<key>LSSupportsOpeningDocumentsInPlace</key>
-            <true/>
-            <key>UIFileSharingEnabled</key>
-            <true/>
+			<true/>
+			<key>UIFileSharingEnabled</key>
+			<true/>
 			<key>UISceneConfigurations</key>
 			<dict>
 				<key>UIWindowSceneSessionRoleApplication</key>

@@ -20,3 +20,7 @@ class ScanError extends ScanState {
 
   ScanError(this.message);
 }
+
+/// Emitted when the backend returns HTTP 400 — the scanned item is not
+/// assigned to any order / agent.
+class ScanUnassigned extends ScanState {}

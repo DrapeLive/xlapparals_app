@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/scanner/domain/usecases/check_usecase.dart';
 import 'package:xlapparals_app/features/agent/orders/scanner/presentation/blocs/scan_event.dart';
@@ -24,9 +25,17 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       );
 
       emit(ScanSuccess(data: result, qrCode: event.qrCode));
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        // Item is not assigned — emit stable state; reset only after user
+        // presses "Scan Another Item" (via _restartScanner → ResetScanner).
+        emit(ScanUnassigned());
+      } else {
+        emit(ScanError(e.toString()));
+        emit(ScanReady());
+      }
     } catch (e) {
       emit(ScanError(e.toString()));
-
       emit(ScanReady());
     }
   }

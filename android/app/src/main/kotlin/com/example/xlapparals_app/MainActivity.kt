@@ -1,4 +1,4 @@
-package com.example.xlapparals_app
+package com.drapelive.xlapparals
 
 import io.flutter.embedding.android.FlutterActivity
 

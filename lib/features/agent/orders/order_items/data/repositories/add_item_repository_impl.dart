@@ -19,12 +19,14 @@ class AddItemRepositoryImpl implements AddItemRepository {
   @override
   Future<void> addItemToOrder({
     required int orderId,
+    required int variantId,
     required String qrCode,
     required int quantity,
     required String sizeGroup,
   }) {
     return remoteDataSource.addItemToOrder(
       orderId: orderId,
+      variantId: variantId,
       qrCode: qrCode,
       quantity: quantity,
       sizeGroup: sizeGroup,

@@ -12,6 +12,35 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     on<FetchCustomers>(_fetchCustomers);
     on<LoadMoreCustomers>(_loadMore);
     on<SearchCustomers>(_searchCustomers);
+    on<CreateCustomer>(_createCustomer);
+    on<FetchTransports>(_fetchTransports);
+  }
+
+  Future<void> _fetchTransports(
+    FetchTransports event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(state.copyWith(isLoadingTransports: true));
+    try {
+      final transports = await repository.getTransports();
+      emit(state.copyWith(isLoadingTransports: false, transports: transports));
+    } catch (_) {
+      emit(state.copyWith(isLoadingTransports: false));
+    }
+  }
+
+  Future<void> _createCustomer(
+    CreateCustomer event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(state.copyWith(isCreating: true, createSuccess: false, createError: null));
+    try {
+      await repository.createCustomer(event.data);
+      emit(state.copyWith(isCreating: false, createSuccess: true));
+      add(FetchCustomers());
+    } catch (e) {
+      emit(state.copyWith(isCreating: false, createError: e.toString()));
+    }
   }
 
   Future<void> _fetchCustomers(

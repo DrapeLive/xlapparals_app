@@ -53,7 +53,7 @@ class EditOrderRemoteDataSourceImpl extends EditOrderRemoteDatasource {
 
   @override
   Future<List<Transport>> getTransports() async {
-    final response = await dio.get('/transports/active/');
+    final response = await dio.get('/transports/');
 
     return (response.data as List)
         .map((e) => Transport(id: e['id'], name: e['name']))

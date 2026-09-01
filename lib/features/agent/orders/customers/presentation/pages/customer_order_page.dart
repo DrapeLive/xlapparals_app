@@ -100,6 +100,25 @@ class _CreateOrderCustomerPageState extends State<CreateOrderCustomerPage> {
                       context.go(RouteNames.agentHome);
                     },
                   ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          backgroundColor: AppColors.orange,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          context.push(RouteNames.addCustomer);
+                        },
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Add Customer'),
+                      ),
+                    ),
+                  ],
                 ),
                 body: Column(
                   children: [

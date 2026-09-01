@@ -20,6 +20,7 @@ class EditOrderItemsSection extends StatelessWidget {
     }
 
     return Column(
+      spacing: 10,
       children: items
           .map((item) => EditOrderItemCard(item: item, orderId: orderId))
           .toList(),

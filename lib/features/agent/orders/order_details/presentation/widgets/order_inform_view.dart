@@ -12,7 +12,7 @@ import 'package:xlapparals_app/features/agent/orders/order_details/presentation/
 import 'package:xlapparals_app/shared/pages/loading_page.dart';
 
 class OrderInformView extends StatelessWidget {
-  const OrderInformView();
+  const OrderInformView({super.key});
 
   @override
   Widget build(BuildContext context) {

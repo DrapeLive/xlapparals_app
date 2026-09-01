@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/core/utils/size_utils.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/presentation/blocs/item_detail_state.dart';
@@ -17,6 +18,7 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     on<ChangeSize>(_changeSize);
     on<IncrementQuantity>(_increment);
     on<DecrementQuantity>(_decrement);
+    on<SetQuantity>(_setQuantity);
     on<AddItemToOrder>(_addToOrder);
   }
 
@@ -24,7 +26,12 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     FetchItemDetails event,
     Emitter<ItemDetailsState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(
+      isLoading: true,
+      error: null,
+      addedSuccessfully: false,
+      isUnassignedItem: false, // Reset the unassigned flag on a new fetch
+    ));
 
     try {
       final item = await getItemByQrUseCase(
@@ -45,15 +52,32 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
         itemType: item.type,
       );
 
+      final defaultSize = item.type == 'kids'
+          ? SizeRangeUtils.getDefaultKidsSize(availableSizes)
+          : (availableSizes.isNotEmpty ? availableSizes.first : null);
+
       emit(
         state.copyWith(
           isLoading: false,
           item: item,
           selectedVariantIndex: selectedIndex,
           availableSizes: availableSizes,
-          selectedSize: availableSizes.isNotEmpty ? availableSizes.first : null,
+          selectedSize: defaultSize,
+          quantity: 1, // always reset to 1 for each new item
+          isUnassignedItem: false, // ensure reset
         ),
       );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            isUnassignedItem: true,
+          ),
+        );
+      } else {
+        emit(state.copyWith(isLoading: false, error: e.toString()));
+      }
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
@@ -69,11 +93,15 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       itemType: state.item!.type,
     );
 
+    final defaultSize = state.item!.type == 'kids'
+        ? SizeRangeUtils.getDefaultKidsSize(availableSizes)
+        : (availableSizes.isNotEmpty ? availableSizes.first : null);
+
     emit(
       state.copyWith(
         selectedVariantIndex: event.index,
         availableSizes: availableSizes,
-        selectedSize: availableSizes.isNotEmpty ? availableSizes.first : null,
+        selectedSize: defaultSize,
       ),
     );
   }
@@ -92,6 +120,11 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     }
   }
 
+  void _setQuantity(SetQuantity event, Emitter<ItemDetailsState> emit) {
+    final qty = event.quantity < 1 ? 1 : event.quantity;
+    emit(state.copyWith(quantity: qty));
+  }
+
   Future<void> _addToOrder(
     AddItemToOrder event,
     Emitter<ItemDetailsState> emit,
@@ -100,13 +133,19 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       return;
     }
 
-    emit(state.copyWith(isAdding: true));
+    if (state.quantity > state.selectedSize!.stock) {
+      emit(state.copyWith(error: "Quantity exceeds available stock"));
+      return;
+    }
+
+    emit(state.copyWith(isAdding: true, error: null));
 
     try {
       final variant = state.item!.variants[state.selectedVariantIndex];
 
       await addItemToOrderUseCase(
         orderId: event.orderId,
+        variantId: variant.id,
         qrCode: variant.qrCode,
         quantity: state.quantity,
         sizeGroup: state.selectedSize!.sizeRange,
