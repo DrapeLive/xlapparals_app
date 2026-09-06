@@ -167,37 +167,37 @@ class OrderInformView extends StatelessWidget {
                               ),
                             ),
 
-                            const SizedBox(width: 12),
+                            // const SizedBox(width: 12),
 
-                            Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: () {
-                                  if (order != null) {
-                                    context.read<OrderDetailsBloc>().add(
-                                      DeleteOrder(order.id),
-                                    );
-                                    context.go(RouteNames.agentHome);
-                                  }
-                                },
+                            // Expanded(
+                            //   child: OutlinedButton.icon(
+                            //     onPressed: () {
+                            //       if (order != null) {
+                            //         context.read<OrderDetailsBloc>().add(
+                            //           DeleteOrder(order.id),
+                            //         );
+                            //         context.go(RouteNames.agentHome);
+                            //       }
+                            //     },
 
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: AppColors.red,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      AppConstants.borderRadius,
-                                    ),
-                                  ),
-                                  side: BorderSide(
-                                    color: AppColors.red,
-                                    width: 1.5,
-                                  ),
-                                ),
+                            //     style: OutlinedButton.styleFrom(
+                            //       foregroundColor: AppColors.red,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(
+                            //           AppConstants.borderRadius,
+                            //         ),
+                            //       ),
+                            //       side: BorderSide(
+                            //         color: AppColors.red,
+                            //         width: 1.5,
+                            //       ),
+                            //     ),
 
-                                icon: const Icon(Icons.delete_outline),
+                            //     icon: const Icon(Icons.delete_outline),
 
-                                label: const Text("Delete"),
-                              ),
-                            ),
+                            //     label: const Text("Delete"),
+                            //   ),
+                            // ),
                           ],
                         ),
                     ],

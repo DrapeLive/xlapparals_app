@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
+import 'package:xlapparals_app/core/utils/size_utils.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/domain/entities/size.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/presentation/blocs/item_detail_state.dart';
 import 'package:xlapparals_app/features/agent/orders/order_items/presentation/blocs/item_details_bloc.dart';
@@ -17,23 +18,11 @@ class SizeDropdown extends StatelessWidget {
       return state.selectedSize!.sizeRange;
     }
 
-    final size2036 = sizes.where((e) => e.sizeRange == '20-36' && e.stock > 0);
-
-    if (size2036.isNotEmpty) {
-      return '20-36';
+    if (state.item?.type == 'kids') {
+      return SizeRangeUtils.getDefaultKidsSize(sizes)?.sizeRange;
     }
 
-    final size2030 = sizes.where((e) => e.sizeRange == '20-30' && e.stock > 0);
-
-    if (size2030.isNotEmpty) {
-      return '20-30';
-    }
-
-    if (sizes.isNotEmpty) {
-      return sizes.first.sizeRange;
-    }
-
-    return null;
+    return sizes.isNotEmpty ? sizes.first.sizeRange : null;
   }
 
   @override

@@ -104,14 +104,36 @@ class SizeRangeUtils {
   }
 
   /// Returns the best default size for kids items following the priority:
-  /// 20-36 → 20-30 → 20-24 → 32-36
-  /// Falls back to the first available size if none of the priority sizes are in stock.
+  /// 20-36 available → (20-24 stockout AND 26-36 available) → (32-36 stockout
+  /// AND 20-30 available) → only 20-24 → only 32-36 → no default selection.
   static ItemSize? getDefaultKidsSize(List<ItemSize> availableSizes) {
-    const priority = ['20-36', '20-30', '20-24', '32-36'];
-    for (final range in priority) {
-      final match = availableSizes.where((s) => s.sizeRange == range).firstOrNull;
-      if (match != null) return match;
+    ItemSize? find(String range) {
+      for (final size in availableSizes) {
+        if (size.sizeRange == range) return size;
+      }
+      return null;
     }
-    return availableSizes.isNotEmpty ? availableSizes.first : null;
+
+    bool isAvailable(String range) => find(range) != null;
+
+    if (isAvailable('20-36')) return find('20-36');
+
+    if (!isAvailable('20-24') && isAvailable('26-36')) {
+      return find('26-36');
+    }
+
+    if (!isAvailable('32-36') && isAvailable('20-30')) {
+      return find('20-30');
+    }
+
+    if (availableSizes.length == 1 && isAvailable('20-24')) {
+      return find('20-24');
+    }
+
+    if (availableSizes.length == 1 && isAvailable('32-36')) {
+      return find('32-36');
+    }
+
+    return null;
   }
 }

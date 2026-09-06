@@ -2,6 +2,7 @@ import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/o
 
 class OrderItemOrderFormModel extends OrderItemOrderForm {
   const OrderItemOrderFormModel({
+    required super.variantDisplayOrder,
     required super.id,
     required super.item,
     required super.variant,
@@ -22,6 +23,7 @@ class OrderItemOrderFormModel extends OrderItemOrderForm {
 
   factory OrderItemOrderFormModel.fromJson(Map<String, dynamic> json) {
     return OrderItemOrderFormModel(
+      variantDisplayOrder: json["variant_display_order"],
       id: json["id"],
       item: json["item"],
       variant: json["variant"],

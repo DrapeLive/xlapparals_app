@@ -4,6 +4,8 @@ class OrderItemOrderForm {
   final int item;
   final int variant;
 
+  final String variantDisplayOrder;
+
   final String sizeGroup;
   final String itemType;
 
@@ -24,6 +26,7 @@ class OrderItemOrderForm {
   final int pieceCount;
 
   const OrderItemOrderForm({
+    required this.variantDisplayOrder,
     required this.id,
     required this.item,
     required this.variant,

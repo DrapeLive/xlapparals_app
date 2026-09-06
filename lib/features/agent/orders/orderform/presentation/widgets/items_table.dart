@@ -63,7 +63,10 @@ class ItemsTable extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(6),
-                child: Text(item.itemName, style: TextStyle(fontSize: 10)),
+                child: Text(
+                  "${item.itemName} (${item.variantDisplayOrder})",
+                  style: TextStyle(fontSize: 10),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(6),
