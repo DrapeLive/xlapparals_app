@@ -6,7 +6,15 @@ class CheckQrUsecase {
 
   CheckQrUsecase(this.repository);
 
-  Future<ScanResponse> call({required String qrCode, required int orderId}) {
-    return repository.checkQr(qrCode: qrCode, orderId: orderId);
+  Future<ScanResponse> call({
+    required String qrCode,
+    required int orderId,
+    required int agentId,
+  }) {
+    return repository.checkQr(
+      qrCode: qrCode,
+      orderId: orderId,
+      agentId: agentId,
+    );
   }
 }

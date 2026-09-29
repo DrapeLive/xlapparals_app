@@ -160,7 +160,11 @@ class DeliveryOptionsCard extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  state.selectedTransport?.name ?? "None",
+                                  state.selectedTransport?.name ??
+                                      _savedTransportLabel(
+                                        state.transports,
+                                        state.order?.preferredTransport,
+                                      ),
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ),
@@ -178,5 +182,15 @@ class DeliveryOptionsCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _savedTransportLabel(List<Transport> transports, int? preferredId) {
+    if (preferredId == null) return "None";
+
+    for (final transport in transports) {
+      if (transport.id == preferredId) return transport.name;
+    }
+
+    return "None";
   }
 }

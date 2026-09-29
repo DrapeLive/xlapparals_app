@@ -11,7 +11,7 @@ class CustomerOrderFormModel extends CustomerOrderForm {
 
   factory CustomerOrderFormModel.fromJson(Map<String, dynamic> json) {
     return CustomerOrderFormModel(
-      id: json["id"],
+      id: json["id"] ?? 0,
       name: json["name"] ?? "",
       contact: json["contact"] ?? "",
       address: json["address"] ?? "",

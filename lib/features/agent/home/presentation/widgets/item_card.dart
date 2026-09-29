@@ -153,15 +153,17 @@ class ItemCard extends StatelessWidget {
                 secondChild: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
-                    children: item.variants
-                        .asMap()
-                        .entries
+                    children: (item.variants.toList()
+                          ..sort((a, b) {
+                            final aOrder = int.tryParse(a.displayOrder) ?? 0;
+                            final bOrder = int.tryParse(b.displayOrder) ?? 0;
+                            return aOrder.compareTo(bOrder);
+                          }))
                         .map(
-                          (entry) => VariantCard(
+                          (variant) => VariantCard(
                             isOutofStock: allOut,
                             type: item.type,
-                            variant: entry.value,
-                            index: (entry.key) + 1,
+                            variant: variant,
                           ),
                         )
                         .toList(),

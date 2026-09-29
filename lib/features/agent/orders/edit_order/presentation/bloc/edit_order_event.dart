@@ -39,3 +39,9 @@ class DeleteItemEvent extends EditOrderEvent {
   final int itemId;
   DeleteItemEvent(this.orderId, this.itemId);
 }
+
+class CancelEditOrder extends EditOrderEvent {
+  final int orderId;
+
+  CancelEditOrder(this.orderId);
+}

@@ -12,6 +12,7 @@ class OrderDetailsState {
   final List<Transport> transports;
   final bool loadingTransports;
   final bool placingOrder;
+  final bool placeOrderSuccess;
 
   const OrderDetailsState({
     this.status = OrderDetailsStatus.initial,
@@ -22,6 +23,7 @@ class OrderDetailsState {
     this.transports = const [],
     this.loadingTransports = false,
     this.placingOrder = false,
+    this.placeOrderSuccess = false,
   });
 
   OrderDetailsState copyWith({
@@ -33,6 +35,7 @@ class OrderDetailsState {
     List<Transport>? transports,
     bool? loadingTransports,
     bool? placingOrder,
+    bool? placeOrderSuccess,
   }) {
     return OrderDetailsState(
       status: status ?? this.status,
@@ -43,6 +46,7 @@ class OrderDetailsState {
       transports: transports ?? this.transports,
       loadingTransports: loadingTransports ?? this.loadingTransports,
       placingOrder: placingOrder ?? this.placingOrder,
+      placeOrderSuccess: placeOrderSuccess ?? this.placeOrderSuccess,
     );
   }
 }

@@ -159,7 +159,13 @@ class EditDeliveryOptionsCard extends StatelessWidget {
                               const Icon(Icons.local_shipping, size: 18),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: Text(order.transportCompany ?? "None"),
+                                child: Text(
+                                  state.transport?.name ??
+                                      _savedTransportLabel(
+                                        state.transports,
+                                        order.preferredTransport,
+                                      ),
+                                ),
                               ),
                               const Icon(Icons.keyboard_arrow_down),
                             ],
@@ -175,5 +181,15 @@ class EditDeliveryOptionsCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _savedTransportLabel(List<Transport> transports, int? preferredId) {
+    if (preferredId == null) return "None";
+
+    for (final transport in transports) {
+      if (transport.id == preferredId) return transport.name;
+    }
+
+    return "None";
   }
 }

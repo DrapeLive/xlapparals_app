@@ -37,4 +37,9 @@ class EditOrderRepositoryImpl extends EditOrderRepository {
   Future<void> deleteItem({required int orderId, required int itemId}) async {
     await remoteDatasource.deleteItem(orderId: orderId, itemId: itemId);
   }
+
+  @override
+  Future<void> cancelEditOrder(int orderId) async {
+    await remoteDatasource.cancelEditOrder(orderId);
+  }
 }

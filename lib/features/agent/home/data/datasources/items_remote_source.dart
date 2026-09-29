@@ -17,6 +17,7 @@ class ItemsRemoteDatasourceImpl implements ItemsRemoteDatasource {
 
     final res = response.data["assigned_items"];
 
+
     await storage.saveAgent(
       id: response.data["id"],
       role: response.data["user"]["role"],

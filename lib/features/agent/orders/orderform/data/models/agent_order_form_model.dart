@@ -9,7 +9,7 @@ class AgentOrderFormModel extends AgentOrderForm {
 
   factory AgentOrderFormModel.fromJson(Map<String, dynamic> json) {
     return AgentOrderFormModel(
-      id: json["id"],
+      id: json["id"] ?? 0,
       username: json["username"] ?? "",
       contact: json["contact"] ?? "",
     );

@@ -22,6 +22,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       final result = await checkQrUsecase(
         qrCode: event.qrCode,
         orderId: event.orderId,
+        agentId: event.agentId,
       );
 
       emit(ScanSuccess(data: result, qrCode: event.qrCode));

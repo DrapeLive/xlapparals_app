@@ -5,23 +5,23 @@ import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/o
 
 class OrderInvoice {
   final int id;
-  final CustomerOrderForm customer;
-  final AgentOrderForm agent;
-  final BrandOrderForm brand;
-  final DateTime createdAt;
-  final String status;
+  final CustomerOrderForm? customer;
+  final AgentOrderForm? agent;
+  final BrandOrderForm? brand;
+  final DateTime? createdAt;
+  final String? status;
   final List<OrderItemOrderForm> items;
   final double totalPrice;
   final double gstRate;
 
   const OrderInvoice({
     required this.id,
-    required this.customer,
-    required this.agent,
-    required this.brand,
-    required this.createdAt,
-    required this.status,
-    required this.items,
+    this.customer,
+    this.agent,
+    this.brand,
+    this.createdAt,
+    this.status,
+    this.items = const [],
     required this.totalPrice,
     required this.gstRate,
   });

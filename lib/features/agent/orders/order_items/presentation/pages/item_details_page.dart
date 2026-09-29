@@ -20,12 +20,14 @@ class ItemDetailsPage extends StatefulWidget {
   final int agentId;
   final int orderId;
   final String qrCode;
+  final bool isEdit;
 
   const ItemDetailsPage({
     super.key,
     required this.orderId,
     required this.qrCode,
     required this.agentId,
+    this.isEdit = false,
   });
 
   @override
@@ -33,6 +35,20 @@ class ItemDetailsPage extends StatefulWidget {
 }
 
 class _ItemDetailsPageState extends State<ItemDetailsPage> {
+  /// Destination to return to when leaving the item details page.
+  /// When editing an order, go back to the edit page; otherwise the scanner
+  /// (used during draft order creation).
+  void _goBack() {
+    if (widget.isEdit) {
+      context.go(RouteNames.editOrder, extra: widget.orderId);
+    } else {
+      context.go(
+        RouteNames.scanner,
+        extra: {"agentId": widget.agentId, "orderId": widget.orderId},
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,10 +64,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          context.go(
-            RouteNames.scanner,
-            extra: {"agentId": widget.agentId, "orderId": widget.orderId},
-          );
+          _goBack();
         }
       },
       child: SafeArea(
@@ -60,12 +73,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
           appBar: AppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                context.go(
-                  RouteNames.scanner,
-                  extra: {"agentId": widget.agentId, "orderId": widget.orderId},
-                );
-              },
+              onPressed: _goBack,
             ),
           ),
           body: BlocConsumer<ItemDetailsBloc, ItemDetailsState>(
@@ -107,13 +115,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context); // Close dialog
-                            context.go(
-                              RouteNames.scanner,
-                              extra: {
-                                "agentId": widget.agentId,
-                                "orderId": widget.orderId,
-                              },
-                            );
+                            _goBack();
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -134,7 +136,11 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
               }
 
               if (state.addedSuccessfully) {
-                context.go(RouteNames.orderDetails, extra: widget.orderId);
+                if (widget.isEdit) {
+                  context.go(RouteNames.editOrder, extra: widget.orderId);
+                } else {
+                  context.go(RouteNames.orderDetails, extra: widget.orderId);
+                }
               }
               if (state.error != null) {
                 ScaffoldMessenger.of(

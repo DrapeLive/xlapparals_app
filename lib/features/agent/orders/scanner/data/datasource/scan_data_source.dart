@@ -5,6 +5,7 @@ abstract class ScanRemoteDatasource {
   Future<ScanResponseModel> checkQr({
     required String qrCode,
     required int orderId,
+    required int agentId,
   });
 }
 
@@ -17,10 +18,11 @@ class ScanRemoteDatasourceImpl implements ScanRemoteDatasource {
   Future<ScanResponseModel> checkQr({
     required String qrCode,
     required int orderId,
+    required int agentId,
   }) async {
     final response = await dio.get(
-      '/items/by-qr/out-of-stock/',
-      queryParameters: {'qr_code': qrCode, 'order_id': orderId},
+      '/items/by-qr/',
+      queryParameters: {'qr_code': qrCode, 'agent_id': agentId},
     );
 
     return ScanResponseModel.fromJson(response.data);

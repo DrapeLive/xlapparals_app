@@ -14,6 +14,8 @@ abstract class EditOrderRemoteDatasource {
   });
 
   Future<void> deleteItem({required int orderId, required int itemId});
+
+  Future<void> cancelEditOrder(int orderId);
 }
 
 class EditOrderRemoteDataSourceImpl extends EditOrderRemoteDatasource {
@@ -45,6 +47,11 @@ class EditOrderRemoteDataSourceImpl extends EditOrderRemoteDatasource {
   }
 
   @override
+  Future<void> cancelEditOrder(int orderId) async {
+    await dio.post('/orders/$orderId/cancel-edit/');
+  }
+
+  @override
   Future<OrderDetailsModel> getOrderDetails(int orderId) async {
     final response = await dio.get("/orders/$orderId/");
     final data = OrderDetailsModel.fromJson(response.data);
@@ -53,7 +60,7 @@ class EditOrderRemoteDataSourceImpl extends EditOrderRemoteDatasource {
 
   @override
   Future<List<Transport>> getTransports() async {
-    final response = await dio.get('/transports/');
+    final response = await dio.get('/transports/active/');
 
     return (response.data as List)
         .map((e) => Transport(id: e['id'], name: e['name']))

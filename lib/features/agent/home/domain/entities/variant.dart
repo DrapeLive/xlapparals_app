@@ -6,6 +6,7 @@ class Variant {
   final String qrCode;
   final DateTime createdAt;
   final List<SizeRange> sizeRanges;
+  final String displayOrder;
 
   const Variant({
     required this.id,
@@ -13,5 +14,6 @@ class Variant {
     required this.qrCode,
     required this.createdAt,
     required this.sizeRanges,
+    required this.displayOrder,
   });
 }

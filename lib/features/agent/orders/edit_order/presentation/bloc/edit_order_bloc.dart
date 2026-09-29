@@ -29,6 +29,12 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
 
       emit(state.copyWith(transports: transports, loadingTransports: false));
     });
+
+    on<CancelEditOrder>((event, emit) async {
+      try {
+        await repository.cancelEditOrder(event.orderId);
+      } catch (_) {}
+    });
   }
 
   Future<void> _saveEdit(
@@ -37,10 +43,18 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
   ) async {
     emit(state.copyWith(saving: true));
 
+    // Transport "None" is represented by a sentinel with id == 0.
+    // When untouched, fall back to the order's already-saved values so
+    // saving an edit never wipes the existing delivery option/date.
+    final selected = state.transport;
+    final transportId = selected == null
+        ? state.order?.preferredTransport
+        : (selected.id == 0 ? null : selected.id);
+
     await repository.saveEditOrder(
       orderId: event.orderId,
-      expectedDate: state.expectedDate,
-      transportId: state.transport?.id,
+      expectedDate: state.expectedDate ?? state.order?.expectedDeliveryDate,
+      transportId: transportId,
     );
 
     emit(state.copyWith(saving: false));

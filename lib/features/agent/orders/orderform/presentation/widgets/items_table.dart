@@ -64,7 +64,7 @@ class ItemsTable extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(6),
                 child: Text(
-                  "${item.itemName} (${item.variantDisplayOrder})",
+                  "${item.itemName} (${item.variantDisplayOrder ?? ''})",
                   style: TextStyle(fontSize: 10),
                 ),
               ),
@@ -75,7 +75,7 @@ class ItemsTable extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(6),
                 child: Text(
-                  "₹${item.itemPrice}",
+                  "₹${item.itemPrice ?? ''}",
                   style: TextStyle(fontSize: 10),
                 ),
               ),
@@ -90,7 +90,7 @@ class ItemsTable extends StatelessWidget {
                 padding: const EdgeInsets.all(6),
                 child: Text(
                   formattedAmount.format(
-                    (double.tryParse(item.itemPrice) ?? 0) *
+                    (double.tryParse(item.itemPrice ?? '') ?? 0) *
                         item.quantity *
                         item.pieceCount,
                   ),

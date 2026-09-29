@@ -7,14 +7,12 @@ import 'package:xlapparals_app/shared/widgets/zoom_image.dart';
 
 class VariantCard extends StatelessWidget {
   final Variant variant;
-  final int index;
   final String type;
   final bool isOutofStock;
   const VariantCard({
     super.key,
     required this.isOutofStock,
     required this.variant,
-    required this.index,
     required this.type,
   });
 
@@ -47,7 +45,7 @@ class VariantCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Variant #$index",
+                    "Color #${variant.displayOrder}",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.primary,

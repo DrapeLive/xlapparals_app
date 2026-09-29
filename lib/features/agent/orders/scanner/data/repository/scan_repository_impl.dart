@@ -8,7 +8,15 @@ class ScanRepositoryImpl implements ScanRepository {
   ScanRepositoryImpl(this.datasource);
 
   @override
-  Future<ScanResponse> checkQr({required String qrCode, required int orderId}) {
-    return datasource.checkQr(qrCode: qrCode, orderId: orderId);
+  Future<ScanResponse> checkQr({
+    required String qrCode,
+    required int orderId,
+    required int agentId,
+  }) {
+    return datasource.checkQr(
+      qrCode: qrCode,
+      orderId: orderId,
+      agentId: agentId,
+    );
   }
 }

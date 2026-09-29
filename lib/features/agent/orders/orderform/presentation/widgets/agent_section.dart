@@ -25,19 +25,21 @@ class AgentSection extends StatelessWidget {
 
         const SizedBox(height: 2),
 
-        Text(
-          agent.username,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-            fontSize: 12,
+        if (agent != null) ...[
+          Text(
+            agent.username,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+              fontSize: 12,
+            ),
           ),
-        ),
 
-        Text(
-          agent.contact,
-          style: TextStyle(color: AppColors.primary, fontSize: 10),
-        ),
+          Text(
+            agent.contact,
+            style: TextStyle(color: AppColors.primary, fontSize: 10),
+          ),
+        ],
       ],
     );
   }

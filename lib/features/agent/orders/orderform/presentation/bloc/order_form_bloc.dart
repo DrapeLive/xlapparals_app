@@ -153,13 +153,15 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
     pw.MemoryImage? logoImage;
 
     try {
-      final response = await dio.get<List<int>>(
-        invoice.brand.logoUrl,
-        options: Options(responseType: ResponseType.bytes),
-      );
+      if (invoice.brand?.logoUrl.isNotEmpty == true) {
+        final response = await dio.get<List<int>>(
+          invoice.brand!.logoUrl,
+          options: Options(responseType: ResponseType.bytes),
+        );
 
-      if (response.data != null) {
-        logoImage = pw.MemoryImage(Uint8List.fromList(response.data!));
+        if (response.data != null) {
+          logoImage = pw.MemoryImage(Uint8List.fromList(response.data!));
+        }
       }
     } catch (e) {}
 
@@ -182,19 +184,19 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
                   pw.Text(
-                    invoice.brand.name,
+                    invoice.brand?.name ?? '',
                     style: pw.TextStyle(
                       fontSize: 22,
                       fontWeight: pw.FontWeight.bold,
                     ),
                   ),
-                  pw.Text(invoice.brand.addressLine1),
-                  if (invoice.brand.addressLine2 != null)
-                    pw.Text(invoice.brand.addressLine2!),
-                  pw.Text(invoice.brand.phone),
-                  pw.Text(invoice.brand.email),
-                  if (invoice.brand.gst.isNotEmpty)
-                    pw.Text("GST : ${invoice.brand.gst}"),
+                  pw.Text(invoice.brand?.addressLine1 ?? ''),
+                  if (invoice.brand?.addressLine2 != null)
+                    pw.Text(invoice.brand!.addressLine2!),
+                  pw.Text(invoice.brand?.phone ?? ''),
+                  pw.Text(invoice.brand?.email ?? ''),
+                  if (invoice.brand?.gst.isNotEmpty == true)
+                    pw.Text("GST : ${invoice.brand!.gst}"),
                 ],
               ),
             ],
@@ -220,11 +222,12 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
                 children: [
                   pw.Text("Order Form #${invoice.id}"),
 
-                  pw.Text("Status : ${invoice.status}"),
+                  pw.Text("Status : ${invoice.status ?? ''}"),
 
-                  pw.Text(
-                    "Date : ${invoice.createdAt.day}/${invoice.createdAt.month}/${invoice.createdAt.year}",
-                  ),
+                  if (invoice.createdAt != null)
+                    pw.Text(
+                      "Date : ${invoice.createdAt!.day}/${invoice.createdAt!.month}/${invoice.createdAt!.year}",
+                    ),
                 ],
               ),
             ],
@@ -237,29 +240,29 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
           ),
 
-          pw.Text(invoice.customer.name),
-          pw.Text(invoice.customer.address),
-          pw.Text(invoice.customer.contact),
+          pw.Text(invoice.customer?.name ?? ''),
+          pw.Text(invoice.customer?.address ?? ''),
+          pw.Text(invoice.customer?.contact ?? ''),
 
           pw.SizedBox(height: 20),
 
           pw.Text("AGENT", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
 
-          pw.Text(invoice.agent.username),
-          pw.Text(invoice.agent.contact),
+          pw.Text(invoice.agent?.username ?? ''),
+          pw.Text(invoice.agent?.contact ?? ''),
 
           pw.SizedBox(height: 20),
 
           pw.TableHelper.fromTextArray(
             headers: const ["Item", "Size", "Price", "Qty", "Amount"],
             data: invoice.items.map((item) {
-              final price = double.tryParse(item.itemPrice) ?? 0.0;
+              final price = double.tryParse(item.itemPrice ?? '') ?? 0.0;
               final amount = price * item.quantity * item.pieceCount;
 
               return [
-                item.itemName,
+                "${item.itemName} (${item.variantDisplayOrder ?? ''})",
                 item.sizeGroup,
-                item.itemPrice,
+                item.itemPrice ?? '',
                 "${item.quantity} x ${item.pieceCount}",
                 currencyFormatter.format(amount),
               ];

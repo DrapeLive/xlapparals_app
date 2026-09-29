@@ -72,29 +72,31 @@ class OrderInvoiceView extends StatelessWidget {
 
                           Column(
                             children: [
-                              Text(
-                                "Order Form #${invoice.id}",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 12,
-                                ),
-                              ),
+                       Text(
+                         "Order Form #${invoice.id}",
+                         style: TextStyle(
+                           color: AppColors.primary,
+                           fontSize: 12,
+                         ),
+                       ),
 
-                              Text(
-                                "Date : ${DateFormat('dd/MM/yyyy').format(invoice.createdAt)}",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 12,
-                                ),
-                              ),
+                       if (invoice.createdAt != null) ...[
+                         Text(
+                           "Date : ${DateFormat('dd/MM/yyyy').format(invoice.createdAt!)}",
+                           style: TextStyle(
+                             color: AppColors.primary,
+                             fontSize: 12,
+                           ),
+                         ),
 
-                              Text(
-                                "Time : ${DateFormat('hh:mm:ss a').format(invoice.createdAt)}",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 12,
-                                ),
-                              ),
+                         Text(
+                           "Time : ${DateFormat('hh:mm:ss a').format(invoice.createdAt!)}",
+                           style: TextStyle(
+                             color: AppColors.primary,
+                             fontSize: 12,
+                           ),
+                         ),
+                       ],
                             ],
                           ),
                         ],

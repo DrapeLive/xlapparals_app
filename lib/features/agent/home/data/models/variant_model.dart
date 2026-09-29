@@ -8,6 +8,7 @@ class VariantModel extends Variant {
     required super.qrCode,
     required super.createdAt,
     required super.sizeRanges,
+    required super.displayOrder,
   });
 
   factory VariantModel.fromJson(Map<String, dynamic> json) {
@@ -19,6 +20,7 @@ class VariantModel extends Variant {
       sizeRanges: (json['size_ranges'] as List)
           .map((e) => SizeRangeModel.fromJson(e))
           .toList(),
+      displayOrder: json['display_order'] ?? '',
     );
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
-import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/domain/entities/order_details.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_bloc.dart';
@@ -76,7 +74,6 @@ class OrderSummaryCard extends StatelessWidget {
                           context.read<OrderDetailsBloc>().add(
                             PlaceOrder(orderId),
                           );
-                          context.go(RouteNames.po, extra: orderId);
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
@@ -86,7 +83,10 @@ class OrderSummaryCard extends StatelessWidget {
                       ? const SizedBox(
                           width: 18,
                           height: 18,
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.secondary,
+                          ),
                         )
                       : const Text("Place Order"),
                 ),

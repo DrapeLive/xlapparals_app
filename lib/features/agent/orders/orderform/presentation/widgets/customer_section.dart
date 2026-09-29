@@ -25,37 +25,39 @@ class CustomerSection extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        Text(
-          customer.name,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-            fontSize: 12,
-          ),
-        ),
-
-        const SizedBox(height: 4),
-
-        Text(
-          customer.address,
-          style: TextStyle(color: AppColors.primary, fontSize: 10),
-        ),
-
-        const SizedBox(height: 4),
-
-        Text(
-          customer.contact,
-          style: TextStyle(color: AppColors.primary, fontSize: 10),
-        ),
-
-        if (customer.gst.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              "GST : ${customer.gst}",
-              style: TextStyle(color: AppColors.primary, fontSize: 10),
+        if (customer != null) ...[
+          Text(
+            customer.name,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+              fontSize: 12,
             ),
           ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            customer.address,
+            style: TextStyle(color: AppColors.primary, fontSize: 10),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            customer.contact,
+            style: TextStyle(color: AppColors.primary, fontSize: 10),
+          ),
+
+          if (customer.gst.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                "GST : ${customer.gst}",
+                style: TextStyle(color: AppColors.primary, fontSize: 10),
+              ),
+            ),
+        ],
       ],
     );
   }

@@ -29,7 +29,6 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
   @override
   Future<OrderDetailsModel> getOrderDetails(int orderId) async {
     final response = await dio.get("/orders/$orderId/");
-    print(response);
     final data = OrderDetailsModel.fromJson(response.data);
     return data;
   }
@@ -37,7 +36,6 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
   @override
   Future<List<Transport>> getTransports() async {
     final response = await dio.get('/transports/active/');
-
     return (response.data as List)
         .map((e) => Transport(id: e['id'], name: e['name']))
         .toList();
@@ -49,7 +47,7 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
     DateTime? expectedDate,
     int? transportId,
   }) async {
-    await dio.post(
+    final response = await dio.post(
       '/orders/$orderId/place-order/',
       data: {
         'expected_delivery_date': expectedDate

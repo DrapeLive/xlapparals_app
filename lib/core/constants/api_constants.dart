@@ -3,6 +3,7 @@ class ApiConstants {
 
   // static const String baseUrl = "https://stock-flow-tnwn.onrender.com/api";
   static const String baseUrl = "https://backend.xlapparals.in/api";
+  // static const String baseUrl = "http://localhost:8000/api";
 
   static const Duration connectTimeout = Duration(seconds: 60);
 

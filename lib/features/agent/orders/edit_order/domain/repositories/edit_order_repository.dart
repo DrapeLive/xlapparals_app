@@ -13,4 +13,6 @@ abstract class EditOrderRepository {
   });
 
   Future<void> deleteItem({required int orderId, required int itemId});
+
+  Future<void> cancelEditOrder(int orderId);
 }

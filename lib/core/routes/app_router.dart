@@ -60,6 +60,7 @@ class AppRouter {
           return ScanItemPage(
             orderId: extra["orderId"],
             agentId: extra["agentId"],
+            isEdit: extra["isEdit"] == true,
           );
         },
       ),
@@ -72,6 +73,7 @@ class AppRouter {
             orderId: extra['orderId'],
             qrCode: extra['qrCode'],
             agentId: extra['agentId'],
+            isEdit: extra['isEdit'] == true,
           );
         },
       ),

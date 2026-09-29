@@ -4,7 +4,7 @@ class OrderItemOrderForm {
   final int item;
   final int variant;
 
-  final String variantDisplayOrder;
+  final String? variantDisplayOrder;
 
   final String sizeGroup;
   final String itemType;
@@ -12,7 +12,7 @@ class OrderItemOrderForm {
   final String itemName;
   final String itemNameDisplay;
 
-  final String itemPrice;
+  final String? itemPrice;
   final String itemPriceDisplay;
 
   final String variantImage;
@@ -26,24 +26,24 @@ class OrderItemOrderForm {
   final int pieceCount;
 
   const OrderItemOrderForm({
-    required this.variantDisplayOrder,
+    this.variantDisplayOrder,
     required this.id,
     required this.item,
     required this.variant,
-    required this.sizeGroup,
-    required this.itemType,
-    required this.itemName,
-    required this.itemNameDisplay,
-    required this.itemPrice,
-    required this.itemPriceDisplay,
-    required this.variantImage,
-    required this.variantImageDisplay,
-    required this.size,
-    required this.sizeDisplay,
-    required this.quantity,
-    required this.packedQuantity,
-    required this.pieceCount,
+    this.sizeGroup = '',
+    this.itemType = '',
+    this.itemName = '',
+    this.itemNameDisplay = '',
+    this.itemPrice,
+    this.itemPriceDisplay = '',
+    this.variantImage = '',
+    this.variantImageDisplay,
+    this.size = '',
+    this.sizeDisplay = '',
+    this.quantity = 0,
+    this.packedQuantity = 0,
+    this.pieceCount = 0,
   });
 
-  double get amount => double.tryParse(itemPrice)! * quantity * pieceCount;
+  double get amount => (double.tryParse(itemPrice ?? '') ?? 0) * quantity * pieceCount;
 }

@@ -24,14 +24,14 @@ class OrderItemOrderFormModel extends OrderItemOrderForm {
   factory OrderItemOrderFormModel.fromJson(Map<String, dynamic> json) {
     return OrderItemOrderFormModel(
       variantDisplayOrder: json["variant_display_order"],
-      id: json["id"],
-      item: json["item"],
-      variant: json["variant"],
+      id: json["id"] ?? 0,
+      item: json["item"] ?? 0,
+      variant: json["variant"] ?? 0,
       sizeGroup: json["size_group"] ?? "",
       itemType: json["item_type"] ?? "",
       itemName: json["item_name"] ?? "",
       itemNameDisplay: json["item_name_display"] ?? "",
-      itemPrice: json["item_price"],
+      itemPrice: json["item_price"]?.toString(),
       itemPriceDisplay: json["item_price_display"] ?? "",
       variantImage: json["variant_image"] ?? "",
       variantImageDisplay: json["variant_image_display"],

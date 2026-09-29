@@ -11,6 +11,8 @@ class BrandSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final brand = invoice.brand;
 
+    if (brand == null) return const SizedBox();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

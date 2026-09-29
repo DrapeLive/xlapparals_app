@@ -14,6 +14,7 @@ import 'package:xlapparals_app/features/agent/orders/order_details/presentation/
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/widgets/order_item_section.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/widgets/order_summary_card.dart';
 import 'package:xlapparals_app/shared/pages/loading_page.dart';
+import 'package:xlapparals_app/shared/widgets/app_toast.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
 
 class OrderDetailsPage extends StatefulWidget {
@@ -123,91 +124,108 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               },
             ),
           ),
-          body: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
-            builder: (context, state) {
-              if (state.status == OrderDetailsStatus.loading) {
-                return const LoadingPage(message: "Fetching Order..");
+          body: BlocListener<OrderDetailsBloc, OrderDetailsState>(
+            listenWhen: (previous, current) =>
+                previous.placingOrder != current.placingOrder,
+            listener: (context, state) {
+              if (state.placingOrder) return;
+
+              if (state.placeOrderSuccess) {
+                context.go(RouteNames.po, extra: widget.orderId);
+              } else if (state.error != null) {
+                AppToast.show(
+                  context,
+                  message: state.error!,
+                  type: ToastType.error,
+                );
               }
+            },
+            child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
+              builder: (context, state) {
+                if (state.status == OrderDetailsStatus.loading) {
+                  return const LoadingPage(message: "Fetching Order..");
+                }
 
-              if (state.order == null) {
-                return const SizedBox();
-              }
+                if (state.order == null) {
+                  return const SizedBox();
+                }
 
-              final order = state.order!;
-              return RefreshIndicator(
-                onRefresh: _refresh,
-                child: ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    CustomerInfoCard(customer: order.customerDetails),
+                final order = state.order!;
+                return RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      CustomerInfoCard(customer: order.customerDetails),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    DeliveryOptionsCard(),
+                      DeliveryOptionsCard(),
 
-                    const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            "Order Items",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              "Order Items",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
-                        ),
 
-                        BlocBuilder<AgentBloc, AgentState>(
-                          builder: (context, agentState) {
-                            final agentId = agentState.agent?.userId;
+                          BlocBuilder<AgentBloc, AgentState>(
+                            builder: (context, agentState) {
+                              final agentId = agentState.agent?.userId;
 
-                            return ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.orange,
-                                foregroundColor: AppColors.secondary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    AppConstants.borderRadius,
+                              return ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.orange,
+                                  foregroundColor: AppColors.secondary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      AppConstants.borderRadius,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              onPressed: agentId == null
-                                  ? null
-                                  : () {
-                                      context.go(
-                                        RouteNames.scanner,
-                                        extra: {
-                                          'orderId': state.order?.id,
-                                          'agentId': agentId,
-                                        },
-                                      );
-                                    },
-                              icon: const Icon(Icons.add),
-                              label: const Text(
-                                "Add Item",
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                                onPressed: agentId == null
+                                    ? null
+                                    : () {
+                                        context.go(
+                                          RouteNames.scanner,
+                                          extra: {
+                                            'orderId': state.order?.id,
+                                            'agentId': agentId,
+                                          },
+                                        );
+                                      },
+                                icon: const Icon(Icons.add),
+                                label: const Text(
+                                  "Add Item",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
 
-                    const SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
-                    OrderItemsSection(items: order.items, orderId: order.id),
+                      OrderItemsSection(items: order.items, orderId: order.id),
 
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    if (order.items.isNotEmpty)
-                      OrderSummaryCard(order: order, orderId: widget.orderId),
-                  ],
-                ),
-              );
-            },
+                      if (order.items.isNotEmpty)
+                        OrderSummaryCard(order: order, orderId: widget.orderId),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

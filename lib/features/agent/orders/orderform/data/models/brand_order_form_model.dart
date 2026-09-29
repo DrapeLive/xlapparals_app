@@ -14,7 +14,7 @@ class BrandOrderFormModel extends BrandOrderForm {
 
   factory BrandOrderFormModel.fromJson(Map<String, dynamic> json) {
     return BrandOrderFormModel(
-      id: json["id"],
+      id: json["id"] ?? 0,
       name: json["name"] ?? "",
       phone: json["phone"] ?? "",
       email: json["email"] ?? "",

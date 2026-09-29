@@ -32,7 +32,13 @@ class _CameraState {
 class ScanItemPage extends StatefulWidget {
   final int orderId;
   final int agentId;
-  const ScanItemPage({super.key, required this.orderId, required this.agentId});
+  final bool isEdit;
+  const ScanItemPage({
+    super.key,
+    required this.orderId,
+    required this.agentId,
+    this.isEdit = false,
+  });
 
   @override
   State<ScanItemPage> createState() => _ScanItemPageState();
@@ -193,6 +199,17 @@ class _ScanItemPageState extends State<ScanItemPage>
     } catch (_) {}
   }
 
+  /// Destination to return to when leaving the scanner.
+  /// When editing an order, go back to the edit page; otherwise the order
+  /// details page (used during draft order creation).
+  void _goToOrder() {
+    if (widget.isEdit) {
+      context.go(RouteNames.editOrder, extra: widget.orderId);
+    } else {
+      context.go(RouteNames.orderDetails, extra: widget.orderId);
+    }
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final controller = _cameraController;
@@ -219,7 +236,7 @@ class _ScanItemPageState extends State<ScanItemPage>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          context.go(RouteNames.orderDetails, extra: widget.orderId);
+          _goToOrder();
         }
       },
       child: BlocListener<ScanBloc, ScanState>(
@@ -233,10 +250,7 @@ class _ScanItemPageState extends State<ScanItemPage>
                 backgroundColor: Colors.transparent,
                 builder: (_) => _OutOfStockSheet(
                   groupStock: state.data.groupStock,
-                  onBackToOrder: () => context.go(
-                    RouteNames.orderDetails,
-                    extra: widget.orderId,
-                  ),
+                  onBackToOrder: _goToOrder,
                   onScanAnother: () async {
                     Navigator.pop(context);
                     await _restartScanner();
@@ -250,6 +264,7 @@ class _ScanItemPageState extends State<ScanItemPage>
                   'orderId': widget.orderId,
                   'qrCode': state.qrCode,
                   'agentId': widget.agentId,
+                  'isEdit': widget.isEdit,
                 },
               );
             }
@@ -320,10 +335,7 @@ class _ScanItemPageState extends State<ScanItemPage>
                 title: const Text('The QR is Invalid'),
                 actions: [
                   TextButton(
-                    onPressed: () => context.go(
-                      RouteNames.orderDetails,
-                      extra: widget.orderId,
-                    ),
+                    onPressed: () => _goToOrder(),
                     child: const Text('Back'),
                   ),
                   ElevatedButton(
@@ -344,8 +356,7 @@ class _ScanItemPageState extends State<ScanItemPage>
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () =>
-                    context.go(RouteNames.orderDetails, extra: widget.orderId),
+                onPressed: _goToOrder,
               ),
             ),
             body: Column(
