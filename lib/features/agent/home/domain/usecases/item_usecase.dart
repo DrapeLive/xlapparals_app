@@ -9,4 +9,8 @@ class GetItemsUseCase {
   Future<List<Item>> call({required int id}) {
     return repository.getItems(id);
   }
+
+  Future<List<Item>?> getCached({required int id}) {
+    return repository.getCachedItems(id);
+  }
 }

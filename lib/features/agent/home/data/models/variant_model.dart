@@ -7,6 +7,7 @@ class VariantModel extends Variant {
     required super.image,
     required super.qrCode,
     required super.createdAt,
+    required super.displayOrder,
     required super.sizeRanges,
     required super.displayOrder,
   });
@@ -17,6 +18,7 @@ class VariantModel extends Variant {
       image: json['image'],
       qrCode: json['qr_code'],
       createdAt: DateTime.parse(json['created_at']),
+      displayOrder: json['display_order'] ?? '',
       sizeRanges: (json['size_ranges'] as List)
           .map((e) => SizeRangeModel.fromJson(e))
           .toList(),

@@ -9,7 +9,10 @@ class OrdersLoading extends OrdersState {}
 class OrdersLoaded extends OrdersState {
   final List<Order> orders;
 
-  OrdersLoaded(this.orders);
+  /// True when [orders] came from the local cache (stale-while-revalidate).
+  final bool isFromCache;
+
+  OrdersLoaded(this.orders, {this.isFromCache = false});
 }
 
 class OrdersError extends OrdersState {

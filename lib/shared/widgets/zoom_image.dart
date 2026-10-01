@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +19,14 @@ class ZoomableImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Decode at display size (x device pixel ratio) instead of full source
+    // resolution, so the many small thumbnails stay cheap to decode and cache.
+    // Only width is constrained: ResizeImagePolicy.exact applies both values
+    // verbatim, which would squash non-square images, so the engine derives
+    // the height from the source's aspect ratio and BoxFit.cover crops.
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final cacheWidth = (width * pixelRatio).ceil();
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
@@ -39,6 +45,7 @@ class ZoomableImage extends StatelessWidget {
           width: width,
           height: height,
           fit: BoxFit.cover,
+          memCacheWidth: cacheWidth,
         ),
       ),
     );

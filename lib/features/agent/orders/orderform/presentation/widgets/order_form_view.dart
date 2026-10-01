@@ -14,6 +14,8 @@ import 'package:xlapparals_app/features/agent/orders/orderform/presentation/widg
 import 'package:xlapparals_app/features/agent/orders/orderform/presentation/widgets/total_section.dart';
 
 class OrderInvoiceView extends StatelessWidget {
+  const OrderInvoiceView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PopScope(

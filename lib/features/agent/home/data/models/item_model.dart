@@ -21,4 +21,10 @@ class ItemModel extends Item {
           .toList(),
     );
   }
+
+  static List<ItemModel> listFromJson(List<dynamic> json) {
+    return json
+        .map((e) => ItemModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }

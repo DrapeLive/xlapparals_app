@@ -15,4 +15,9 @@ class OrdersRepositoryImpl implements OrdersRepository {
 
     return response.orders;
   }
+
+  @override
+  Future<List<Order>?> getCachedOrders() async {
+    return datasource.getCachedOrders();
+  }
 }

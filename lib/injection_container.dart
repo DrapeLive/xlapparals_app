@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:xlapparals_app/core/cache/api_cache_service.dart';
 import 'package:xlapparals_app/core/network/dio_client.dart';
 import 'package:xlapparals_app/features/agent/home/data/datasources/items_remote_source.dart';
 import 'package:xlapparals_app/features/agent/home/data/datasources/orders_remote_datasource.dart';
@@ -10,6 +12,16 @@ import 'package:xlapparals_app/features/agent/home/domain/usecases/item_usecase.
 import 'package:xlapparals_app/features/agent/home/domain/usecases/order_usecase.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/fetch_item/item_fetch_bloc.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/orders/orders_bloc.dart';
+import 'package:xlapparals_app/features/agent/notifications/data/datasources/notification_remote_data_source.dart';
+import 'package:xlapparals_app/features/agent/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/repositories/notification_repository.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/usecases/delete_notification_usecase.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/usecases/get_notifications_usecase.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/usecases/get_unread_count_usecase.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/usecases/mark_all_notifications_read_usecase.dart';
+import 'package:xlapparals_app/features/agent/notifications/domain/usecases/mark_notification_read_usecase.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/blocs/notifications/notifications_bloc.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/blocs/notifications/notifications_event.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/data/datasources/create_order_data_source.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/data/datasources/customer_remote_data_source.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/data/repository/create_order_repository_impl.dart';
@@ -47,6 +59,8 @@ import 'package:xlapparals_app/features/agent/profile/domain/repository/profile_
 import 'package:xlapparals_app/features/agent/profile/presentation/blocs/profile/profile_bloc.dart';
 import 'package:xlapparals_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:xlapparals_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:xlapparals_app/shared/services/local_cache_service.dart';
+import 'package:xlapparals_app/shared/services/notification_service.dart';
 import 'package:xlapparals_app/shared/services/secure_storage_service.dart';
 import 'package:xlapparals_app/shared/services/user_storage_service.dart';
 
@@ -61,7 +75,17 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => UserStorageService());
 
-  sl.registerLazySingleton(() => DioClient(sl<SecureStorageService>()).dio);
+  sl.registerLazySingleton(() => ApiCacheService());
+
+  sl.registerLazySingleton(() => LocalCacheService());
+
+  sl.registerLazySingleton(
+    () => NotificationService(sl<Dio>(), sl<UserStorageService>()),
+  );
+
+  sl.registerLazySingleton(
+    () => DioClient(sl<SecureStorageService>(), sl<ApiCacheService>()).dio,
+  );
 
   sl.registerLazySingleton<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(sl()),
@@ -71,27 +95,29 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => LoginUseCase(sl()));
 
-  sl.registerFactory(() => AuthBloc(sl(), sl(), sl()));
+  sl.registerFactory(
+    () => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl()),
+  );
 
   sl.registerLazySingleton<OrdersRemoteDatasource>(
-    () => OrdersRemoteDatasourceImpl(sl()),
+    () => OrdersRemoteDatasourceImpl(sl(), sl()),
   );
 
   sl.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(sl()));
 
   sl.registerLazySingleton(() => GetOrdersUseCase(sl()));
 
-  sl.registerFactory(() => OrdersBloc(sl()));
+  sl.registerFactory(() => OrdersBloc(sl(), sl()));
 
   sl.registerLazySingleton<ItemsRemoteDatasource>(
-    () => ItemsRemoteDatasourceImpl(sl(), sl()),
+    () => ItemsRemoteDatasourceImpl(sl(), sl(), sl()),
   );
 
   sl.registerLazySingleton<ItemRepository>(() => ItemsRepositoryImpl(sl()));
 
   sl.registerLazySingleton(() => GetItemsUseCase(sl()));
 
-  sl.registerFactory(() => ItemFetchBloc(sl(), sl()));
+  sl.registerFactory(() => ItemFetchBloc(sl(), sl(), sl()));
 
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(sl()),
@@ -186,4 +212,34 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => EditOrderBloc(sl<EditOrderRepository>()));
+
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton(() => GetNotificationsUseCase(sl()));
+  sl.registerLazySingleton(() => GetUnreadCountUseCase(sl()));
+  sl.registerLazySingleton(() => MarkNotificationReadUseCase(sl()));
+  sl.registerLazySingleton(() => MarkAllNotificationsReadUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteNotificationUseCase(sl()));
+
+  sl.registerLazySingleton(
+    () => NotificationsBloc(
+      getNotificationsUseCase: sl(),
+      getUnreadCountUseCase: sl(),
+      markReadUseCase: sl(),
+      markAllReadUseCase: sl(),
+      deleteUseCase: sl(),
+    ),
+  );
+
+  // Live-update the Home bell's unread badge whenever a push arrives while
+  // the app is in the foreground.
+  sl<NotificationService>().onForegroundMessage = () {
+    sl<NotificationsBloc>().add(FetchNotifications());
+  };
 }

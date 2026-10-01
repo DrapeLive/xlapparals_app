@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/pages/home_page.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/pages/notifications_page.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/pages/add_customer_page.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/pages/customer_order_page.dart';
 import 'package:xlapparals_app/features/agent/orders/edit_order/presentation/pages/edit_order_page.dart';
@@ -32,6 +33,30 @@ class AppRouter {
 
       if (isLoggedIn && isLoginRoute) {
         return RouteNames.agentHome;
+      }
+
+      // Routes below read `state.extra` with an unguarded cast at build time.
+      // `extra` is in-memory only, so a cold start / deep link arrives with
+      // `null` extra and would crash the app - bounce back to home instead.
+      final intExtraRoutes = {
+        RouteNames.orderDetails,
+        RouteNames.po,
+        RouteNames.orderInform,
+        RouteNames.editOrder,
+      };
+      final mapExtraRoutes = {
+        RouteNames.scanner,
+        RouteNames.orderItems,
+      };
+
+      if (intExtraRoutes.contains(state.matchedLocation)) {
+        if (state.extra is! int) return RouteNames.agentHome;
+      }
+
+      if (mapExtraRoutes.contains(state.matchedLocation)) {
+        if (state.extra is! Map<String, dynamic>) {
+          return RouteNames.agentHome;
+        }
       }
 
       return null;
@@ -106,6 +131,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.addCustomer,
         builder: (context, state) => const AddCustomerPage(),
+      ),
+      GoRoute(
+        path: RouteNames.notifications,
+        builder: (context, state) => const NotificationsPage(),
       ),
     ],
   );

@@ -23,6 +23,19 @@ class ItemFilterSearchChanged extends ItemFilterEvent {
   List<Object?> get props => [query];
 }
 
+class ItemFilterQrLocated extends ItemFilterEvent {
+  final int itemId;
+  final String variantQrCode;
+
+  const ItemFilterQrLocated({
+    required this.itemId,
+    required this.variantQrCode,
+  });
+
+  @override
+  List<Object?> get props => [itemId, variantQrCode];
+}
+
 class ItemFilterCleared extends ItemFilterEvent {
   const ItemFilterCleared();
 }

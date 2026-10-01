@@ -10,4 +10,8 @@ class GetOrdersUseCase {
   Future<List<Order>> call() {
     return repository.getOrders();
   }
+
+  Future<List<Order>?> getCached() {
+    return repository.getCachedOrders();
+  }
 }

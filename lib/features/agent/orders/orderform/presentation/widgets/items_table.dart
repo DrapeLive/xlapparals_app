@@ -6,9 +6,10 @@ import 'package:xlapparals_app/core/theme/app_colors.dart';
 class ItemsTable extends StatelessWidget {
   final OrderInvoice invoice;
 
-  ItemsTable(this.invoice);
+  static final formattedAmount =
+      NumberFormat.currency(locale: 'en_IN', symbol: '₹');
 
-  final formattedAmount = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
+  const ItemsTable(this.invoice, {super.key});
 
   @override
   Widget build(BuildContext context) {

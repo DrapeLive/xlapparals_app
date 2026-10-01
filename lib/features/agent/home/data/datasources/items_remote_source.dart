@@ -1,15 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:xlapparals_app/features/agent/home/data/models/item_model.dart';
+import 'package:xlapparals_app/shared/services/local_cache_service.dart';
 import 'package:xlapparals_app/shared/services/user_storage_service.dart';
 
 abstract class ItemsRemoteDatasource {
   Future<List<ItemModel>> getItems(int id);
+
+  Future<List<ItemModel>?> getCachedItems(int id);
 }
 
 class ItemsRemoteDatasourceImpl implements ItemsRemoteDatasource {
+  static String _cacheKey(int id) => 'items_$id';
+
   final Dio dio;
   UserStorageService storage;
-  ItemsRemoteDatasourceImpl(this.dio, this.storage);
+  final LocalCacheService localCache;
+  ItemsRemoteDatasourceImpl(this.dio, this.storage, this.localCache);
 
   @override
   Future<List<ItemModel>> getItems(int id) async {
@@ -17,6 +23,11 @@ class ItemsRemoteDatasourceImpl implements ItemsRemoteDatasource {
 
     final res = response.data["assigned_items"];
 
+<<<<<<< HEAD
+=======
+    // Persist the raw list for stale-while-revalidate on next launch.
+    await localCache.write(_cacheKey(id), res);
+>>>>>>> ae51382 (Update agent app features)
 
     await storage.saveAgent(
       id: response.data["id"],
@@ -29,5 +40,12 @@ class ItemsRemoteDatasourceImpl implements ItemsRemoteDatasource {
     );
 
     return (res as List).map((item) => ItemModel.fromJson(item)).toList();
+  }
+
+  @override
+  Future<List<ItemModel>?> getCachedItems(int id) async {
+    final raw = await localCache.read(_cacheKey(id));
+    if (raw == null) return null;
+    return ItemModel.listFromJson(raw as List);
   }
 }

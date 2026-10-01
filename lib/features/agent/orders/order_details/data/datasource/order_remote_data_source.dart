@@ -29,8 +29,13 @@ class OrderDetailsRemoteDatasourceImpl implements OrderDetailsRemoteDatasource {
   @override
   Future<OrderDetailsModel> getOrderDetails(int orderId) async {
     final response = await dio.get("/orders/$orderId/");
+<<<<<<< HEAD
     final data = OrderDetailsModel.fromJson(response.data);
     return data;
+=======
+
+    return OrderDetailsModel.fromJson(response.data);
+>>>>>>> ae51382 (Update agent app features)
   }
 
   @override

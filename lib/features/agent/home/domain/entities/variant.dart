@@ -5,6 +5,7 @@ class Variant {
   final String image;
   final String qrCode;
   final DateTime createdAt;
+  final String displayOrder;
   final List<SizeRange> sizeRanges;
   final String displayOrder;
 
@@ -13,6 +14,7 @@ class Variant {
     required this.image,
     required this.qrCode,
     required this.createdAt,
+    required this.displayOrder,
     required this.sizeRanges,
     required this.displayOrder,
   });

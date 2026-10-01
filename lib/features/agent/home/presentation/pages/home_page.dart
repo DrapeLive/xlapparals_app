@@ -18,6 +18,9 @@ import 'package:xlapparals_app/features/agent/home/presentation/pages/history_pa
 import 'package:xlapparals_app/features/agent/home/presentation/pages/items_page.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/pages/orders_page.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/widgets/nav.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/blocs/notifications/notifications_bloc.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/blocs/notifications/notifications_event.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/widgets/notification_bell.dart';
 import 'package:xlapparals_app/shared/pages/error_page.dart';
 import 'package:xlapparals_app/shared/pages/loading_page.dart';
 
@@ -35,11 +38,13 @@ class _HomePageState extends State<HomePage> {
 
     context.read<OrdersBloc>().add(FetchOrders());
     context.read<ItemFetchBloc>().add(FetchItems());
+    context.read<NotificationsBloc>().add(FetchNotifications());
   }
 
   Future<void> _refreshOrders() async {
-    context.read<OrdersBloc>().add(FetchOrders());
-    context.read<ItemFetchBloc>().add(FetchItems());
+    // Pull-to-refresh must bypass every cache layer (memory + local).
+    context.read<OrdersBloc>().add(const FetchOrders(forceRefresh: true));
+    context.read<ItemFetchBloc>().add(const FetchItems(forceRefresh: true));
   }
 
   @override
@@ -90,7 +95,9 @@ class _HomePageState extends State<HomePage> {
                       return ErrorPage(
                         message: orderState.message,
                         onRetry: () {
-                          context.read<OrdersBloc>().add(FetchOrders());
+                          context
+                              .read<OrdersBloc>()
+                              .add(const FetchOrders(forceRefresh: true));
                         },
                       );
                     }
@@ -98,7 +105,9 @@ class _HomePageState extends State<HomePage> {
                       return ErrorPage(
                         message: itemState.message,
                         onRetry: () {
-                          context.read<ItemFetchBloc>().add(FetchItems());
+                          context
+                              .read<ItemFetchBloc>()
+                              .add(const FetchItems(forceRefresh: true));
                         },
                       );
                     }
@@ -110,14 +119,16 @@ class _HomePageState extends State<HomePage> {
                             order.status == "PACKED";
                       }).toList();
 
-                      final dispatchedOrders = orderState.orders.where((order) {
-                        return order.status == "DISPATCHED";
+                      final historyOrders = orderState.orders.where((order) {
+                        return order.status == "DISPATCHED" ||
+                            order.status == "DELIVERED" ||
+                            order.status == "CANCELLED";
                       }).toList();
 
                       final pages = [
                         RefreshIndicator(
                           onRefresh: _refreshOrders,
-                          child: HistoryPage(orders: dispatchedOrders),
+                          child: HistoryPage(orders: historyOrders),
                         ),
                         RefreshIndicator(
                           onRefresh: _refreshOrders,
@@ -134,6 +145,8 @@ class _HomePageState extends State<HomePage> {
                           backgroundColor: AppColors.secondary,
                           actionsPadding: const EdgeInsets.only(right: 15),
                           actions: [
+                            const NotificationBell(),
+                            const SizedBox(width: 12),
                             GestureDetector(
                               onTap: () {
                                 context.go(RouteNames.agentProfile);
@@ -158,6 +171,9 @@ class _HomePageState extends State<HomePage> {
                         ),
 
                         body: IndexedStack(
+                          // Navigation-state caching: keep all three tabs alive
+                          // so switching tabs preserves scroll position and
+                          // loaded list state without refetching.
                           index: navState.selectedIndex,
                           children: pages,
                         ),

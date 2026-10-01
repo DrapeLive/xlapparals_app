@@ -7,4 +7,11 @@ abstract class ItemFetchEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchItems extends ItemFetchEvent {}
+class FetchItems extends ItemFetchEvent {
+  final bool forceRefresh;
+
+  const FetchItems({this.forceRefresh = false});
+
+  @override
+  List<Object?> get props => [forceRefresh];
+}

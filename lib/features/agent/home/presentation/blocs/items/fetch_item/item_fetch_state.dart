@@ -15,10 +15,13 @@ class ItemFetchLoading extends ItemFetchState {}
 class ItemFetchLoaded extends ItemFetchState {
   final List<Item> items;
 
-  const ItemFetchLoaded(this.items);
+  /// True when [items] came from the local cache (stale-while-revalidate).
+  final bool isFromCache;
+
+  const ItemFetchLoaded(this.items, {this.isFromCache = false});
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, isFromCache];
 }
 
 class ItemFetchError extends ItemFetchState {

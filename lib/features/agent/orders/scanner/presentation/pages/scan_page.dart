@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
-import 'package:xlapparals_app/features/agent/orders/scanner/presentation/widgets/scan_overlay_widget.dart';
+import 'package:xlapparals_app/features/agent/orders/scanner/presentation/widgets/item_search_box.dart';
 
 import '../blocs/scan_bloc.dart';
 import '../blocs/scan_event.dart';
@@ -60,6 +60,8 @@ class _ScanItemPageState extends State<ScanItemPage>
   );
 
   bool _isProcessing = false;
+
+  bool _showSearch = false;
 
   @override
   void initState() {
@@ -196,7 +198,23 @@ class _ScanItemPageState extends State<ScanItemPage>
           !controller.value.isStreamingImages) {
         await controller.startImageStream(_processCameraImage);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Restart scanner failed: $e');
+    }
+  }
+
+  Future<void> _handleSearchSelected(String qrCode) async {
+    await _cameraController?.stopImageStream();
+
+    if (!mounted) return;
+
+    context.read<ScanBloc>().add(
+      ScanDetected(
+        qrCode: qrCode,
+        orderId: widget.orderId,
+        agentId: widget.agentId,
+      ),
+    );
   }
 
   /// Destination to return to when leaving the scanner.
@@ -271,6 +289,7 @@ class _ScanItemPageState extends State<ScanItemPage>
           }
 
           if (state is ScanUnassigned) {
+            if (!context.mounted) return;
             await showDialog(
               context: context,
               barrierDismissible: false,
@@ -327,6 +346,7 @@ class _ScanItemPageState extends State<ScanItemPage>
           }
 
           if (state is ScanError) {
+            if (!context.mounted) return;
             await showDialog(
               context: context,
               barrierDismissible: false,
@@ -358,123 +378,262 @@ class _ScanItemPageState extends State<ScanItemPage>
                 icon: const Icon(Icons.arrow_back),
                 onPressed: _goToOrder,
               ),
-            ),
-            body: Column(
-              children: [
-                const SizedBox(height: 24),
-                Expanded(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // ValueListenableBuilder rebuilds only the camera area
-                      // — the rest of the widget tree never rebuilds
-                      ValueListenableBuilder<_CameraState>(
-                        valueListenable: _cameraState,
-                        builder: (context, state, _) {
-                          return switch (state.status) {
-                            _CameraStatus.loading => const ColoredBox(
-                              color: Colors.black,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            _CameraStatus.error => ColoredBox(
-                              color: Colors.black,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.white,
-                                      size: 64,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      state.errorMessage ?? 'Camera error',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 24),
-                                    ElevatedButton.icon(
-                                      onPressed: _initCamera,
-                                      icon: const Icon(Icons.refresh),
-                                      label: const Text('Retry'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            _CameraStatus.ready => ClipRect(
-                              child: SizedBox.expand(
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: SizedBox(
-                                    width: _cameraController!
-                                        .value
-                                        .previewSize!
-                                        .height,
-                                    height: _cameraController!
-                                        .value
-                                        .previewSize!
-                                        .width,
-                                    child: CameraPreview(_cameraController!),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          };
-                        },
-                      ),
-                      const ScannerOverlay(),
-                    ],
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    'Scan Item',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                BlocBuilder<ScanBloc, ScanState>(
-                  builder: (context, state) {
-                    final text = state is ScanLoading
-                        ? 'VERIFYING...'
-                        : 'AWAITING SCAN';
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                  SizedBox(height: 2),
+                  Text(
+                    'STEP 3: QR SCANNER',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Camera preview frame — rounded, accent border, shadow
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: AppColors.primary,
+                        width: 3.5,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.14),
+                          blurRadius: 18,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(21),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // ValueListenableBuilder rebuilds only the camera
+                            // area — the rest of the tree never rebuilds
+                            ValueListenableBuilder<_CameraState>(
+                              valueListenable: _cameraState,
+                              builder: (context, state, _) {
+                                return switch (state.status) {
+                                  _CameraStatus.loading => const ColoredBox(
+                                    color: Colors.black,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  _CameraStatus.error => ColoredBox(
+                                    color: Colors.black,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.white,
+                                            size: 64,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            state.errorMessage ??
+                                                'Camera error',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 24),
+                                          ElevatedButton.icon(
+                                            onPressed: _initCamera,
+                                            icon: const Icon(Icons.refresh),
+                                            label: const Text('Retry'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _CameraStatus.ready => ClipRect(
+                                    child: SizedBox.expand(
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: SizedBox(
+                                          width: _cameraController!
+                                              .value
+                                              .previewSize!
+                                              .height,
+                                          height: _cameraController!
+                                              .value
+                                              .previewSize!
+                                              .width,
+                                          child: CameraPreview(
+                                            _cameraController!,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                };
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "Align QR Code",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Text(
+                    ),
+                  ),
+
+                  // Status badge
+                  const SizedBox(height: 24),
+                  Center(
+                    child: BlocBuilder<ScanBloc, ScanState>(
+                      builder: (context, state) {
+                        final text = state is ScanLoading
+                            ? 'VERIFYING...'
+                            : 'AWAITING SCAN';
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 9,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.07),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.qr_code_2,
+                                size: 15,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 7),
+                              Text(
+                                text,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.2,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Heading & instructions
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Align QR Code',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
                     "Position the item's QR code within the frame to add it to the order",
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.4,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-              ],
+
+                  // Primary button
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () =>
+                          setState(() => _showSearch = !_showSearch),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.search, size: 18),
+                          SizedBox(width: 8),
+                          Text(
+                            'Search item by name',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Search box (toggled by the button)
+                  if (_showSearch) ...[
+                    const SizedBox(height: 16),
+                    ItemSearchBox(
+                      onItemSelected: _handleSearchSelected,
+                    ),
+                  ],
+
+                  // Secondary link
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => context.go(
+                      RouteNames.orderDetails,
+                      extra: widget.orderId,
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    child: const Text('Back to Orders'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:xlapparals_app/core/cache/api_cache_service.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/core/routes/route_name.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
+import 'package:xlapparals_app/injection_container.dart';
+import 'package:xlapparals_app/shared/services/local_cache_service.dart';
 import 'package:xlapparals_app/shared/services/secure_storage_service.dart';
 
 class SignOutButton extends StatelessWidget {
@@ -47,6 +50,12 @@ class SignOutButton extends StatelessWidget {
 
     if (shouldSignOut == true) {
       await storage.clear();
+
+      // Cache invalidation on logout: drop both the in-memory API cache and
+      // any persisted stale-while-revalidate data so no residual data leaks
+      // into the next signed-in account.
+      sl<ApiCacheService>().invalidateAll();
+      await sl<LocalCacheService>().clearAll();
 
       if (context.mounted) {
         context.go(RouteNames.login);

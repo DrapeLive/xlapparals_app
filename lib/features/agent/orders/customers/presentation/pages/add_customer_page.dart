@@ -176,7 +176,7 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                     const Center(child: CircularProgressIndicator())
                   else
                     DropdownButtonFormField<Transport>(
-                      value: _selectedTransport,
+                      initialValue: _selectedTransport,
                       decoration: InputDecoration(
                         labelText: 'Preferred Transport',
                         border: OutlineInputBorder(

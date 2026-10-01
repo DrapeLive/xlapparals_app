@@ -25,6 +25,18 @@ class StatusBadge extends StatelessWidget {
           bgColor: const Color(0xFFDCFCE7),
         );
 
+      case 'DELIVERED':
+        return (
+          textColor: const Color(0xFF15803D),
+          bgColor: const Color(0xFFDCFCE7),
+        );
+
+      case 'CANCELLED':
+        return (
+          textColor: const Color(0xFFDC2626),
+          bgColor: const Color(0xFFFEE2E2),
+        );
+
       default:
         return (textColor: Colors.grey.shade700, bgColor: Colors.grey.shade100);
     }

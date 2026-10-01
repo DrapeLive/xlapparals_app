@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
 import 'package:xlapparals_app/features/agent/home/domain/entities/item.dart';
+import 'package:xlapparals_app/features/agent/home/domain/entities/variant.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/item_filter/item_filter_bloc.dart';
+import 'package:xlapparals_app/features/agent/home/presentation/pages/qr_scanner_page.dart';
 
 class ItemsHeader extends StatefulWidget {
   final List<Item> allItems;
@@ -21,6 +23,48 @@ class _ItemsHeaderState extends State<ItemsHeader> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _openQrScanner() async {
+    final scanned = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (_) => const QrScannerPage()),
+    );
+    if (scanned == null || scanned.isEmpty) return;
+    if (!mounted) return;
+    _locateByQr(scanned);
+  }
+
+  void _locateByQr(String scannedValue) {
+    final qr = scannedValue.trim().toLowerCase();
+    if (qr.isEmpty) return;
+
+    Item? matchItem;
+    Variant? matchVariant;
+    for (final item in widget.allItems) {
+      for (final variant in item.variants) {
+        if (variant.qrCode.trim().toLowerCase() == qr) {
+          matchItem = item;
+          matchVariant = variant;
+          break;
+        }
+      }
+      if (matchItem != null) break;
+    }
+
+    if (matchItem == null || matchVariant == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No item found for this QR code')),
+      );
+      return;
+    }
+
+    _searchController.clear();
+    context.read<ItemFilterBloc>().add(
+      ItemFilterQrLocated(
+        itemId: matchItem.id,
+        variantQrCode: matchVariant.qrCode,
+      ),
+    );
   }
 
   @override
@@ -44,55 +88,82 @@ class _ItemsHeaderState extends State<ItemsHeader> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (value) => context.read<ItemFilterBloc>().add(
-                    ItemFilterSearchChanged(value),
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Search items...',
-                    hintStyle: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 11,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: AppColors.textPrimary,
-                      size: 16,
-                    ),
-                    suffixIcon: state.hasActiveFilters
-                        ? IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              size: 18,
-                              color: AppColors.textPrimary,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (value) =>
+                            context.read<ItemFilterBloc>().add(
+                              ItemFilterSearchChanged(value),
                             ),
-                            onPressed: () {
-                              _searchController.clear();
-                              context.read<ItemFilterBloc>().add(
-                                const ItemFilterCleared(),
-                              );
-                            },
-                          )
-                        : null,
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 12,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.borderRadius,
+                        decoration: InputDecoration(
+                          hintText: 'Search items...',
+                          hintStyle: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 11,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: AppColors.textPrimary,
+                            size: 16,
+                          ),
+                          suffixIcon: state.hasActiveFilters
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    size: 18,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    context.read<ItemFilterBloc>().add(
+                                      const ItemFilterCleared(),
+                                    );
+                                  },
+                                )
+                              : null,
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.borderRadius,
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                       ),
-                      borderSide: BorderSide.none,
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: _openQrScanner,
+                      child: Container(
+                        height: 46,
+                        width: 46,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadius,
+                          ),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: const Icon(
+                          Icons.qr_code_scanner,
+                          size: 20,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(

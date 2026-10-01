@@ -42,6 +42,7 @@ class _ItemsView extends StatelessWidget {
                 items: allItems,
                 tab: state.activeTab,
                 searchQuery: state.searchQuery,
+                exactItemId: state.exactItemId,
               );
 
               if (filtered.isEmpty) {
@@ -68,7 +69,12 @@ class _ItemsView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: filtered.length,
                 itemBuilder: (context, index) {
-                  return ItemCard(item: filtered[index]);
+                  final item = filtered[index];
+                  return ItemCard(
+                    item: item,
+                    autoExpand: item.id == state.exactItemId,
+                    highlightVariantQrCode: state.highlightVariantQrCode,
+                  );
                 },
               );
             },

@@ -5,7 +5,7 @@ import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/o
 class TotalsSection extends StatelessWidget {
   final OrderInvoice invoice;
 
-  const TotalsSection(this.invoice);
+  const TotalsSection(this.invoice, {super.key});
 
   @override
   Widget build(BuildContext context) {

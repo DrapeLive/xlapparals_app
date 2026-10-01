@@ -15,7 +15,7 @@ class ProfileCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: color.withOpacity(.1),
+            backgroundColor: color.withValues(alpha: .1),
             child: Icon(icon, color: color, size: 18),
           ),
           const SizedBox(width: 14),

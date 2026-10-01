@@ -1,5 +1,6 @@
 import 'package:xlapparals_app/features/agent/home/data/datasources/items_remote_source.dart';
 import 'package:xlapparals_app/features/agent/home/data/models/item_model.dart';
+import 'package:xlapparals_app/features/agent/home/domain/entities/item.dart';
 import 'package:xlapparals_app/features/agent/home/domain/repositories/item_repository.dart';
 
 class ItemsRepositoryImpl implements ItemRepository {
@@ -12,5 +13,10 @@ class ItemsRepositoryImpl implements ItemRepository {
     final response = await datasource.getItems(id);
 
     return response;
+  }
+
+  @override
+  Future<List<Item>?> getCachedItems(int id) async {
+    return datasource.getCachedItems(id);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
@@ -39,9 +40,19 @@ class VariantThumbnailList extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      variants[index].image,
+                    child: CachedNetworkImage(
+                      imageUrl: variants[index].image,
                       fit: BoxFit.cover,
+                      placeholder: (_, _) => Container(
+                        color: Colors.grey.shade200,
+                      ),
+                      errorWidget: (_, _, _) => Container(
+                        color: Colors.grey.shade200,
+                        child: const Icon(
+                          Icons.image_not_supported_outlined,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ),

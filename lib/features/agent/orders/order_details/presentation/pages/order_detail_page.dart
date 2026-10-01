@@ -72,6 +72,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         );
 
         if (shouldLeave == true) {
+          if (!context.mounted) return;
           if (context.canPop()) {
             context.pop();
           }
@@ -117,6 +118,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 );
 
                 if (shouldLeave == true) {
+                  if (!context.mounted) return;
                   if (context.canPop()) {
                     context.pop();
                   }

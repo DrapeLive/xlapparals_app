@@ -1,0 +1,27 @@
+import 'package:xlapparals_app/features/agent/notifications/domain/entities/app_notification.dart';
+
+abstract class NotificationsState {
+  const NotificationsState();
+}
+
+class NotificationsInitial extends NotificationsState {
+  const NotificationsInitial();
+}
+
+class NotificationsLoading extends NotificationsState {
+  const NotificationsLoading();
+}
+
+class NotificationsLoaded extends NotificationsState {
+  final List<AppNotification> notifications;
+
+  final int unreadCount;
+
+  const NotificationsLoaded(this.notifications, this.unreadCount);
+}
+
+class NotificationsError extends NotificationsState {
+  final String message;
+
+  const NotificationsError(this.message);
+}

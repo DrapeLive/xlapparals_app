@@ -29,4 +29,10 @@ class OrderModel extends Order {
       createdAt: json["created_at"],
     );
   }
+
+  static List<OrderModel> listFromJson(List<dynamic> json) {
+    return json
+        .map((e) => OrderModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }

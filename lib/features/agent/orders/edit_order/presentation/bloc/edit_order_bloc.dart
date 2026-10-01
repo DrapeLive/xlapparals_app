@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer' as developer;
 import 'package:xlapparals_app/features/agent/orders/edit_order/domain/repositories/edit_order_repository.dart';
 
 import 'edit_order_event.dart';
@@ -68,7 +69,7 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
       final order = await repository.getOrderDetails(event.orderId);
       emit(state.copyWith(order: order));
     } catch (e) {
-      // Implement Future
+      developer.log('Fetch edit order details failed: $e');
     }
   }
 
@@ -80,7 +81,9 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
       final order = await repository.getOrderDetails(event.orderId);
 
       emit(state.copyWith(order: order));
-    } catch (_) {}
+    } catch (e) {
+      developer.log('Refresh edit order details failed: $e');
+    }
   }
 
   Future<void> _deleteItem(
@@ -94,6 +97,9 @@ class EditOrderBloc extends Bloc<EditOrderEvent, EditOrderState> {
       add(FetchEditOrderDetails(event.orderId));
 
       emit(state.copyWith(loading: false));
-    } catch (_) {}
+    } catch (e) {
+      developer.log('Delete item failed: $e');
+      emit(state.copyWith(loading: false));
+    }
   }
 }

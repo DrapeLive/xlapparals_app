@@ -9,22 +9,29 @@ class VariantCard extends StatelessWidget {
   final Variant variant;
   final String type;
   final bool isOutofStock;
+  final String? highlightQrCode;
   const VariantCard({
     super.key,
     required this.isOutofStock,
     required this.variant,
     required this.type,
+    this.highlightQrCode,
   });
 
   @override
   Widget build(BuildContext context) {
     final displaySizes = SizeRangeUtils.getSizeRangesWithStock(variant, type);
+    final isHighlighted = highlightQrCode != null &&
+        highlightQrCode == variant.qrCode;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: isHighlighted ? Color(0xFFFFF2E5) : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+        border: isHighlighted
+            ? Border.all(color: AppColors.primary, width: 1.5)
+            : null,
       ),
       child: Column(
         children: [
@@ -45,7 +52,11 @@ class VariantCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+<<<<<<< HEAD
                     "Color #${variant.displayOrder}",
+=======
+                    "Color #${variant.displayOrder.trim().isEmpty ? index : variant.displayOrder.trim()}",
+>>>>>>> ae51382 (Update agent app features)
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.primary,

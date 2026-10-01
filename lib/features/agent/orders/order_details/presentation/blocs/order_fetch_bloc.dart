@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer' as developer;
 import 'package:xlapparals_app/features/agent/orders/order_details/domain/repository/order_repository.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_event.dart';
 import 'package:xlapparals_app/features/agent/orders/order_details/presentation/blocs/order_fetch_state.dart';
@@ -109,7 +110,9 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
       final order = await repository.getOrderDetails(event.orderId);
 
       emit(state.copyWith(status: OrderDetailsStatus.success, order: order));
-    } catch (_) {}
+    } catch (e) {
+      developer.log('Refresh order details failed: $e');
+    }
   }
 
   Future<void> _startEdit(
@@ -139,7 +142,8 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
         itemId: event.itemId,
       );
       add(FetchOrderDetails(event.orderId));
-    } catch (_) {
+    } catch (e) {
+      developer.log('Delete order item failed: $e');
       add(FetchOrderDetails(event.orderId));
     }
   }

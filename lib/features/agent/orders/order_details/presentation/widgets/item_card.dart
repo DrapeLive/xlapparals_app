@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xlapparals_app/core/constants/app_constants.dart';
 import 'package:xlapparals_app/core/theme/app_colors.dart';
@@ -27,11 +28,26 @@ class OrderInformItemCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              item.variantImage!,
+            child: CachedNetworkImage(
+              imageUrl: item.variantImage!,
               width: 50,
               height: 50,
               fit: BoxFit.cover,
+              placeholder: (_, _) => Container(
+                width: 50,
+                height: 50,
+                color: Colors.grey.shade200,
+              ),
+              errorWidget: (_, _, _) => Container(
+                width: 50,
+                height: 50,
+                color: Colors.grey.shade200,
+                child: const Icon(
+                  Icons.image_not_supported_outlined,
+                  size: 20,
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ),
           ),
 

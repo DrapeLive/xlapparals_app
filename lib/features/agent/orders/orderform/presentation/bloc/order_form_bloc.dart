@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:xlapparals_app/features/agent/orders/orderform/domain/entities/order_form.dart';
 import 'package:flutter/services.dart';
+import 'dart:developer' as developer;
 import '../../domain/repositories/order_form_repository.dart';
 import 'order_form_event.dart';
 import 'order_form_states.dart';
@@ -163,7 +164,9 @@ class OrderInvoiceBloc extends Bloc<OrderInvoiceEvent, OrderInvoiceState> {
           logoImage = pw.MemoryImage(Uint8List.fromList(response.data!));
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      developer.log('Invoice logo fetch failed: $e');
+    }
 
     pdf.addPage(
       pw.MultiPage(

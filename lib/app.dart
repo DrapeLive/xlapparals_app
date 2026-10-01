@@ -5,6 +5,7 @@ import 'package:xlapparals_app/features/agent/home/presentation/blocs/bottom_nav
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/expand_item/item_bloc.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/items/fetch_item/item_fetch_bloc.dart';
 import 'package:xlapparals_app/features/agent/home/presentation/blocs/orders/orders_bloc.dart';
+import 'package:xlapparals_app/features/agent/notifications/presentation/blocs/notifications/notifications_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/customer_bloc.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/customer_event.dart';
 import 'package:xlapparals_app/features/agent/orders/customers/presentation/blocs/order_bloc.dart';
@@ -41,6 +42,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => sl<ItemDetailsBloc>()),
         BlocProvider(create: (_) => sl<AgentBloc>()),
         BlocProvider(create: (_) => sl<EditOrderBloc>()),
+        BlocProvider<NotificationsBloc>(create: (_) => sl<NotificationsBloc>()),
       ],
       child: MaterialApp.router(
         title: AppConstants.appName,
